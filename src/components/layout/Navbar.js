@@ -5,11 +5,13 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
       <div className="container">
-        <a className="logo navbar-brand" to="/">
+        <Link className="logo navbar-brand" to="/">
           <img src="https://kszk.vot.pl/kszk.png" alt="" />
-          <i className="fas fa-archway"></i>
-          <span style={{ fontSize: "1.1em" }}>&nbsp;Muzeum Katalog </span>
-        </a>
+
+          <span style={{ fontSize: "1.1em" }}>
+            &nbsp;<i className="fas fa-archway"></i>&nbsp;Muzeum Katalog{" "}
+          </span>
+        </Link>
 
         <button
           className="navbar-toggler"
@@ -23,24 +25,24 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <a className="nav-link" href="login.html">
+              <Link className="nav-link" to="/login">
                 <i className="fas fa-sign-in-alt"></i> Logowanie
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="register.html">
+              <Link className="nav-link" to="/register">
                 <i className="fas fa-user-plus"></i> Rejestracja
-              </a>
+              </Link>
             </li>
             <li className="nav-item d-none d-sm-block">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to="#">
                 |
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="bootcamps.html">
+              <Link className="nav-link" to="/museums">
                 Nasze Muzea
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
