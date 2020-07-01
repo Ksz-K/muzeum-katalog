@@ -45,3 +45,7 @@ img {
 .logo i:hover {
   color: #fff !important;
 }
+
+.forLink link:hover {
+  color: red !important;
+}
