@@ -7,6 +7,7 @@ import Login from "./components/auth/Login";
 import ManageAccount from "./components/auth/ManageAccount";
 import ResetPassword from "./components/auth/ResetPassword";
 import UpdatePassword from "./components/auth/UpdatePassword";
+import Alert from "./components/layout/Alert";
 
 import "./App.css";
 
@@ -16,6 +17,7 @@ const App = () => {
       <Fragment>
         <Navbar />
         <Route exact path="/" component={Landing} />
+        <Alert />
         <Switch>
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />

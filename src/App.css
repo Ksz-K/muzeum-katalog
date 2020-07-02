@@ -3,7 +3,7 @@
   --dark-color: #343a40;
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
-  --success-color: #28a745;
+  --success-color: #09fb09;
 }
 
 img {
@@ -34,7 +34,7 @@ img {
 .logo {
   display: flex;
   align-items: center;
-  color: #09fb09 !important;
+  color: var(--success-color) !important;
 }
 .logo img {
   width: 50px;
@@ -48,4 +48,81 @@ img {
 
 .forLink link:hover {
   color: red !important;
+}
+
+/* Forms */
+
+form div {
+  position: relative;
+}
+
+form div label {
+  position: absolute;
+  top: 0.5rem;
+  left: 1.25rem;
+  pointer-events: none;
+  color: #8a8a8a;
+  font-size: 1rem;
+  transition: transform 777ms ease-out, font-size 888ms ease-out;
+}
+
+input:not([type="radio"]):focus ~ label {
+  top: 0.4rem;
+  font-size: 0.4rem;
+  letter-spacing: 3px;
+  font-weight: bold;
+}
+
+input:focus {
+  outline: none;
+}
+
+/* Alert */
+.btn-primary,
+.bg-primary,
+.badge-primary,
+.alert-primary {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn-light,
+.bg-light,
+.badge-light,
+.alert-light {
+  background: var(--light-color);
+  color: #333;
+}
+
+.btn-dark,
+.bg-dark,
+.badge-dark,
+.alert-dark {
+  background: var(--dark-color);
+  color: #fff;
+}
+
+.btn-danger,
+.bg-danger,
+.badge-danger,
+.alert-danger {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+.btn-success,
+.bg-success,
+.badge-success,
+.alert-success {
+  background: var(--success-color);
+  color: #fff;
+}
+
+.btn-white,
+.bg-white,
+.badge-white,
+.alert-white {
+  background: #fff;
+  color: #333;
+  border: #ccc solid 1px;
 }

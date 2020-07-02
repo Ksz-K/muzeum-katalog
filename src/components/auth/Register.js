@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { setAlert } from "../../actions/alert";
+import PropTypes from "prop-types";
 
-const Register = () => {
+const Register = ({ setAlert }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,26 +23,9 @@ const Register = () => {
     e.preventDefault();
     if (password !== password2) {
       console.log("Password do not match");
+      setAlert("Hasła nie zgadzają się", "danger");
     } else {
-      const newUser = {
-        name,
-        email,
-        password,
-        role,
-      };
-      try {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        const body = JSON.stringify(newUser);
-
-        const res = await axios.post("/api/v1/auth/register", body, config);
-        console.log(res.data);
-      } catch (err) {
-        console.error(err.response.data);
-      }
+      console.log("OK");
     }
   };
   return (
@@ -54,61 +39,63 @@ const Register = () => {
                   <i className="fas fa-user-plus"></i> Rejestracja
                 </h1>
                 <p>
-                  Zarejestruj się aby dodać muzeum (Muzealnik) badź opinię
-                  (Zwiedzający)
+                  Zarejestruj się aby dodać muzeum (Muzealnik) <br></br> badź
+                  opinię (Zwiedzający)
                 </p>
                 <form onSubmit={(e) => onSubmit(e)}>
-                  <div className="form-group">
-                    <label htmlFor="name">Imię</label>
+                  <div className="form-group anim">
                     <input
                       type="text"
                       name="name"
                       value={name}
                       onChange={(e) => onChange(e)}
                       className="form-control"
-                      placeholder="Proszę podać imię"
                       required
                     />
+                    <label style={name ? { display: "none" } : {}}>Imię</label>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="email">Adres e-mail</label>
                     <input
                       type="email"
                       name="email"
                       value={email}
                       onChange={(e) => onChange(e)}
                       className="form-control"
-                      placeholder="Twój e-mail"
                       required
-                    />
+                    />{" "}
+                    <label style={email ? { display: "none" } : {}}>
+                      Adres e-mail
+                    </label>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="password">Hasło</label>
                     <input
                       type="password"
                       name="password"
                       value={password}
                       onChange={(e) => onChange(e)}
                       className="form-control"
-                      placeholder="Wpisz hasło"
                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                       title="Hasło musi zawierać minimum 1 cyfrę, jedną małą literę, jedną wielką literę i być nie krótsze niż 8 znaków."
                       required
-                    />
+                    />{" "}
+                    <label style={password ? { display: "none" } : {}}>
+                      Hasło
+                    </label>
                   </div>
                   <div className="form-group mb-4">
-                    <label htmlFor="password2">Powtórz hasło</label>
                     <input
                       type="password"
                       name="password2"
                       value={password2}
                       onChange={(e) => onChange(e)}
                       className="form-control"
-                      placeholder="Potwierdź hasło"
                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                       title="Hasło musi zawierać minimum 1 cyfrę, jedną małą literę, jedną wielką literę i być nie krótsze niż 8 znaków."
                       required
-                    />
+                    />{" "}
+                    <label style={password2 ? { display: "none" } : {}}>
+                      Powtórz hasło
+                    </label>
                   </div>
 
                   <div className="card card-body mb-3">
@@ -122,9 +109,9 @@ const Register = () => {
                         checked={formData.role === "user"}
                         onChange={(e) => onChange(e)}
                       />
-                      <label className="form-check-label">
+                      <div className="form-check-label">
                         Zwiedzający (aby dodawać opinie)
-                      </label>
+                      </div>
                     </div>
                     <div className="form-check">
                       <input
@@ -135,9 +122,9 @@ const Register = () => {
                         checked={formData.role === "publisher"}
                         onChange={(e) => onChange(e)}
                       />
-                      <label className="form-check-label">
+                      <div className="form-check-label">
                         Muzealnik (aby dodać Muzeum)
-                      </label>
+                      </div>
                     </div>
                   </div>
                   <div className="form-group">
@@ -165,4 +152,8 @@ const Register = () => {
   );
 };
 
-export default Register;
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+};
+
+export default connect(null, { setAlert })(Register);
