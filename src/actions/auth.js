@@ -8,6 +8,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  UPDATE_PASSWORD,
+  ACTION_PENDING,
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -82,7 +84,6 @@ export const login = ({ email, password }) => async (dispatch) => {
       payload: res.data,
     });
 
-    dispatch(setAlert("Logowanie przebiegło pomyślnie", "success"));
     dispatch(loadUser());
   } catch (error) {
     const errors = error.response.data.error.split(",");
@@ -96,7 +97,45 @@ export const login = ({ email, password }) => async (dispatch) => {
   }
 };
 
+//Update password of logged-in user
+export const updatePassword = ({ currentPassword, newPassword }) => async (
+  dispatch
+) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({ currentPassword, newPassword });
+
+  try {
+    const res = await axios.put("/api/v1/auth/updatepassword", body, config);
+
+    dispatch({
+      type: UPDATE_PASSWORD,
+      payload: res.data,
+    });
+    dispatch(setAlert("Hasło zostało pomyślnie zaktualizowane", "success"));
+    dispatch(loadUser());
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+  }
+};
+
 //Logout / Clear Profile
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
+};
+
+//Action pending
+export const actionPending = () => (dispatch) => {
+  dispatch({ type: ACTION_PENDING });
 };

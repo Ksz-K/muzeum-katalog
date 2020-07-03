@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -12,7 +12,7 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
           className="badge badge-primary"
           style={{ pointerEvents: "none", padding: 8, margin: 8 }}
         >
-          {!loading && user.name}
+          {user.name}
         </span>
       </li>
       <li className="nav-item">
@@ -20,7 +20,7 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
           className="badge badge-success"
           style={{ pointerEvents: "none", padding: 8, margin: 8 }}
         >
-          {!loading && user.role}
+          {user.role === "user" ? "Zwiedzający" : "Muzealnik"}
         </span>
       </li>
       <li className="nav-item">
@@ -31,6 +31,8 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
       </li>
     </ul>
   );
+
+  useEffect(() => {}, []);
 
   const guestLinks = (
     <ul className="navbar-nav ml-auto">

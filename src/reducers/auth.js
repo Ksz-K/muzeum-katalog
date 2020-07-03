@@ -6,13 +6,16 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  UPDATE_PASSWORD,
+  ACTION_PENDING,
 } from "../actions/types";
 
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
   loading: true,
-  user: null,
+  passwordChanged: undefined,
+  user: {},
 };
 
 export default function (state = initialState, action) {
@@ -22,7 +25,6 @@ export default function (state = initialState, action) {
     case USER_LOADED:
       return {
         ...state,
-
         isAuthenticated: true,
         loading: false,
         user: payload,
@@ -36,6 +38,15 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false,
       };
+    case UPDATE_PASSWORD:
+      localStorage.setItem("token", payload.token);
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
+        passwordChanged: true,
+      };
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -46,6 +57,14 @@ export default function (state = initialState, action) {
         token: null,
         isAuthenticated: false,
         loading: false,
+        passwordChanged: undefined,
+        user: "none",
+      };
+
+    case ACTION_PENDING:
+      return {
+        ...state,
+        passwordChanged: "pending",
       };
 
     default:
