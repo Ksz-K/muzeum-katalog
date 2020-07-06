@@ -12,7 +12,7 @@ const UpdatePassword = ({
   actionPending,
 }) => {
   useEffect(() => {
-    actionPending();
+    actionPending("passwordChanged");
   }, []);
 
   const [formData, setFormData] = useState({

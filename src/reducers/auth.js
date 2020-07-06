@@ -8,6 +8,7 @@ import {
   LOGOUT,
   UPDATE_PASSWORD,
   ACTION_PENDING,
+  MANAGE_ACCOUNT,
 } from "../actions/types";
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   isAuthenticated: null,
   loading: true,
   passwordChanged: undefined,
+  accountChanged: undefined,
   user: {},
 };
 
@@ -47,6 +49,13 @@ export default function (state = initialState, action) {
         loading: false,
         passwordChanged: true,
       };
+    case MANAGE_ACCOUNT:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        accountChanged: true,
+      };
     case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -58,13 +67,14 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
         passwordChanged: undefined,
+        accountChanged: undefined,
         user: "none",
       };
 
     case ACTION_PENDING:
       return {
         ...state,
-        passwordChanged: "pending",
+        [payload]: "pending",
       };
 
     default:

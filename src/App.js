@@ -41,6 +41,11 @@ const App = () => {
               path="/updatepassword"
               component={UpdatePassword}
             />
+            <PrivateRoute
+              exact
+              path="/manageaccount"
+              component={ManageAccount}
+            />
           </Switch>
         </Fragment>
       </Router>

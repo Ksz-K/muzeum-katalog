@@ -10,6 +10,7 @@ import {
   LOGOUT,
   UPDATE_PASSWORD,
   ACTION_PENDING,
+  MANAGE_ACCOUNT,
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -130,12 +131,42 @@ export const updatePassword = ({ currentPassword, newPassword }) => async (
   }
 };
 
+//Manage account of logged-in user
+export const manageAccount = ({ name, email }) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({ name, email });
+
+  try {
+    const res = await axios.put("/api/v1/auth/updatedetails", body, config);
+
+    dispatch({
+      type: MANAGE_ACCOUNT,
+    });
+    dispatch(setAlert("Dane zostały pomyślnie zaktualizowane", "success"));
+    dispatch(loadUser());
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+  }
+};
+
 //Logout / Clear Profile
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
 };
 
 //Action pending
-export const actionPending = () => (dispatch) => {
-  dispatch({ type: ACTION_PENDING });
+export const actionPending = (actionName) => (dispatch) => {
+  dispatch({ type: ACTION_PENDING, payload: actionName });
 };

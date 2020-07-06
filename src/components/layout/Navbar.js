@@ -23,11 +23,31 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
           {user.role === "user" ? "Zwiedzający" : "Muzealnik"}
         </span>
       </li>
-      <li className="nav-item">
-        <a onClick={logout} className="nav-link" href="#!">
-          <i className="fas fa-sign-out-alt"></i>
-          &nbsp; Wyloguj
+      <li className="nav-item dropdown">
+        <a
+          className="nav-link dropdown-toggle"
+          href="#!"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+        >
+          <i className="fas fa-user"></i> Konto
         </a>
+        <div className="dropdown-menu">
+          <Link className="dropdown-item" to="/managemuseums">
+            Twoje Muzea
+          </Link>
+          <Link className="dropdown-item" to="/managereviews">
+            Twoje Opinie
+          </Link>
+          <Link className="dropdown-item" to="/manageaccount">
+            Twoje Konto
+          </Link>
+          <div className="dropdown-divider"></div>
+          <a className="dropdown-item" onClick={logout} href="#!">
+            <i className="fas fa-sign-out-alt"></i> Wyloguj
+          </a>
+        </div>
       </li>
     </ul>
   );
