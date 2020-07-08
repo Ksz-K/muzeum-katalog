@@ -12,6 +12,7 @@ import ResetPassword from "./components/auth/ResetPassword";
 import UpdatePassword from "./components/auth/UpdatePassword";
 import Alert from "./components/layout/Alert";
 import { loadUser } from "./actions/auth";
+import { whereVisitorIs } from "./actions/museum";
 import setAuthToken from "./utils/setAuthToken";
 
 import "./App.css";
@@ -23,15 +24,15 @@ if (localStorage.token) {
 const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
+    store.dispatch(whereVisitorIs());
   }, []);
 
   return (
     <Provider store={store}>
       <Router>
         <Fragment>
-          <Navbar />
+          <Navbar /> <Alert />
           <Route exact path="/" component={Landing} />
-          <Alert />
           <Switch>
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />

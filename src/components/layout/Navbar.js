@@ -3,8 +3,14 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
+import { countMuseums } from "../../actions/museum";
 
-const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
+const Navbar = ({
+  auth: { isAuthenticated, loading, user },
+  logout,
+  museum: { counter },
+  countMuseums,
+}) => {
   const authLinks = (
     <ul className="navbar-nav ml-auto">
       <li className="nav-item">
@@ -52,7 +58,9 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
     </ul>
   );
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    countMuseums();
+  }, []);
 
   const guestLinks = (
     <ul className="navbar-nav ml-auto">
@@ -88,6 +96,13 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
           <span style={{ fontSize: "1.1em" }}>
             &nbsp;<i className="fas fa-archway"></i>&nbsp;Muzeum Katalog{" "}
           </span>
+
+          <span
+            className="badge badge-success"
+            style={{ pointerEvents: "none", padding: 8, margin: 8 }}
+          >
+            Obiektów w bazie: <span style={{ color: "#306" }}> {counter}</span>
+          </span>
         </Link>
 
         <button
@@ -111,9 +126,11 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
 
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
+  countMuseums: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  museum: state.museum,
 });
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logout, countMuseums })(Navbar);

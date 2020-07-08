@@ -1,6 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { takeCities } from "../../actions/museum";
+import { setAlert } from "../../actions/alert";
+import Suggestion from "./inputSuggestion";
+import removeDuplicatesBy from "../../utils/removeDuplicates";
 
 const Landing = () => {
+  const dispatch = useDispatch();
+  const geoLocation = useSelector((state) => state.museum.visitorLocation);
+  const fullList = useSelector((state) => state.museum.cities);
+  const citySelected = useSelector((state) => state.museum.citySelected);
+
+  const listForSuggestions = removeDuplicatesBy((city) => city.name, fullList);
+
+  const [formData, setFormData] = useState({
+    place: "Zbieram dane...",
+    km: "",
+    longitude: "",
+    latitude: "",
+  });
+
+  useEffect(() => {
+    if (geoLocation.country_name !== undefined) {
+      setFormData({
+        place: `${geoLocation.country_name}-${geoLocation.region_name}-${geoLocation.city}`,
+        km: "",
+        longitude: geoLocation.longitude,
+        latitude: geoLocation.latitude,
+      });
+    }
+  }, [geoLocation]);
+
+  useEffect(() => {
+    dispatch(takeCities());
+  }, []);
+
+  const { place, km, longitude, latitude } = formData;
+
+  const onChange = (e) => {
+    if (e.target.value < 0) {
+      e.target.value = Math.abs(e.target.value);
+    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    let params = {};
+    if (km === 0 || km === "") {
+      dispatch(
+        setAlert("Obręb wyszukiwania musi być większy niż 0 km", "primary")
+      );
+    }
+    if (citySelected !== null && citySelected.cityPending) {
+      dispatch(
+        setAlert(
+          `W bazie nie mamy miejscowości ${citySelected.cityPending}`,
+          "primary"
+        )
+      );
+    } else if (citySelected !== null) {
+      params = {
+        km,
+        longitude: citySelected.coord.lon,
+        latitude: citySelected.coord.lat,
+      };
+    } else {
+      params = {
+        km,
+        longitude,
+        latitude,
+      };
+    }
+    console.log(params);
+    //dispatch(manageAccount({ name, email }));
+  };
+
   return (
     <section className="showcase">
       <div className="dark-overlay">
@@ -10,26 +85,23 @@ const Landing = () => {
             Tu znajdziesz informacje o muzeach, wystawach i opiniach
             zwiedzających
           </p>
-          <form>
+          <form onSubmit={(e) => onSubmit(e)}>
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
                   <input
-                    type="text"
+                    type="number"
                     className="form-control"
-                    name="miles"
-                    placeholder="Obręb wyszukiwania"
+                    name="km"
+                    value={km}
+                    onChange={(e) => onChange(e)}
+                    placeholder="Obręb wyszukiwania w km"
                   />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="zipcode"
-                    placeholder="Miasto"
-                  />
+                  <Suggestion place={place} fullList={listForSuggestions} />
                 </div>
               </div>
             </div>

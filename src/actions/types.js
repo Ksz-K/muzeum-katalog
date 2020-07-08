@@ -10,3 +10,9 @@ export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 export const MANAGE_ACCOUNT = "MANAGE_ACCOUNT";
 export const ACTION_PENDING = "ACTION_PENDING";
+
+export const COUNT_MUSEUMS = "COUNT_MUSEUMS";
+export const WHERE_IS = "WHERE_IS";
+export const TAKE_CITIES = "TAKE_CITIES";
+
+export const UPDATE_SELECTED = "UPDATE_SELECTED";

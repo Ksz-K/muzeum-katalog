@@ -10,7 +10,6 @@ const ManageAccount = () => {
   }, []);
 
   const auth = useSelector((state) => state.auth);
-  console.log(auth);
 
   const [formData, setFormData] = useState({
     email: auth.user.email || "",
