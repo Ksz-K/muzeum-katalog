@@ -18,3 +18,4 @@ export const TAKE_CITIES = "TAKE_CITIES";
 export const UPDATE_SELECTED = "UPDATE_SELECTED";
 
 export const LOAD_2_SHOW = "LOAD_2_SHOW";
+export const LOAD_NEAR_2_SHOW = "LOAD_NEAR_2_SHOW";

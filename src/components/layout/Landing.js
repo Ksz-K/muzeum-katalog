@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { takeCities } from "../../actions/museum";
+import { loadNear2show, load2show } from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
 import Suggestion from "./inputSuggestion";
-import removeDuplicatesBy from "../../utils/removeDuplicates";
 
-const Landing = () => {
+const Landing = ({ history }) => {
   const dispatch = useDispatch();
   const geoLocation = useSelector((state) => state.museum.visitorLocation);
   const fullList = useSelector((state) => state.museum.cities);
@@ -32,6 +33,7 @@ const Landing = () => {
   useEffect(() => {
     if (fullList.length === 0) {
       dispatch(takeCities());
+      dispatch(load2show());
     }
   }, []);
 
@@ -48,12 +50,12 @@ const Landing = () => {
     e.preventDefault();
     let params = {};
     if (km === 0 || km === "") {
-      dispatch(
+      return dispatch(
         setAlert("Obręb wyszukiwania musi być większy niż 0 km", "primary")
       );
     }
     if (citySelected !== null && citySelected.cityPending) {
-      dispatch(
+      return dispatch(
         setAlert(
           `W bazie nie mamy miejscowości ${citySelected.cityPending}`,
           "primary"
@@ -72,8 +74,10 @@ const Landing = () => {
         latitude,
       };
     }
-    console.log(params);
-    //dispatch(manageAccount({ name, email }));
+
+    dispatch(loadNear2show(params));
+
+    history.push("/museums");
   };
 
   return (
@@ -117,4 +121,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default withRouter(Landing);

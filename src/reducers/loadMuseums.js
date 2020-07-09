@@ -1,4 +1,4 @@
-import { LOAD_2_SHOW } from "../actions/types";
+import { LOAD_2_SHOW, LOAD_NEAR_2_SHOW } from "../actions/types";
 
 const initialState = {
   loading: true,
@@ -12,11 +12,12 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case LOAD_2_SHOW:
+    case LOAD_NEAR_2_SHOW:
       return {
         ...state,
         loading: false,
         loaded: payload.data,
-        pagination: payload.pagination,
+        pagination: payload.pagination ? payload.pagination : {},
         returnedNo: payload.count * 1,
       };
 

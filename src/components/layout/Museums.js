@@ -1,12 +1,11 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { takeCities } from "../../actions/museum";
-import { load2show } from "../../actions/loadMuseums";
+import { load2show, loadNear2show } from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
 import Museum from "./Museum";
 import Suggestion from "./inputSuggestion";
 import Spinner from "./Spinner";
-import { USER_LOADED } from "../../actions/types";
 
 const Museums = () => {
   const dispatch = useDispatch();
@@ -16,17 +15,16 @@ const Museums = () => {
   const citySelected = useSelector((state) => state.museum.citySelected);
   const loadMuseums = useSelector((state) => state.loadMuseums);
 
+  if (loadMuseums.returnedNo === 0) {
+    dispatch(setAlert("Wyszukiwanie zwróciło zero wyników", "primary"));
+  }
+
   useEffect(() => {
     if (fullList.length === 0) {
       dispatch(takeCities());
-    }
-  }, [fullList]);
-
-  useEffect(() => {
-    if (!loadMuseums.loaded[0]) {
       dispatch(load2show());
     }
-  }, []);
+  }, [fullList]);
 
   const [formData, setFormData] = useState({
     place: "Zbieram dane...",
@@ -60,7 +58,7 @@ const Museums = () => {
         latitude: citySelected.coord.lat,
       });
     }
-  }, [citySelected]);
+  }, []);
 
   useEffect(() => {
     if (!Object.keys(loadMuseums.pagination).length === 0) {
@@ -108,8 +106,8 @@ const Museums = () => {
         latitude,
       };
     }
-    console.log(params);
-    //dispatch(manageAccount({ name, email }));
+
+    dispatch(loadNear2show(params));
   };
 
   //Create logic for pagination
@@ -154,6 +152,17 @@ const Museums = () => {
                   className="btn btn-primary btn-block"
                 />
               </form>
+              {!loadMuseums.returnedNo && (
+                <button
+                  type="button"
+                  className="btn btn-dark btn-block mt-2"
+                  onClick={() => {
+                    dispatch(load2show());
+                  }}
+                >
+                  Resetuj wyszukiwanie
+                </button>
+              )}
             </div>
 
             <h4>Filter</h4>
@@ -247,7 +256,7 @@ const Museums = () => {
                     {pages.map((page, index) => (
                       <li className="page-item" key={index}>
                         <a
-                          className="page-link"
+                          className="page-link  "
                           href="#!"
                           onClick={() => {
                             setPaginationLogic({
