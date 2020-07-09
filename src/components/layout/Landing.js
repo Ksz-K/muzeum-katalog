@@ -11,8 +11,6 @@ const Landing = () => {
   const fullList = useSelector((state) => state.museum.cities);
   const citySelected = useSelector((state) => state.museum.citySelected);
 
-  const listForSuggestions = removeDuplicatesBy((city) => city.name, fullList);
-
   const [formData, setFormData] = useState({
     place: "Zbieram dane...",
     km: "",
@@ -32,7 +30,9 @@ const Landing = () => {
   }, [geoLocation]);
 
   useEffect(() => {
-    dispatch(takeCities());
+    if (fullList.length === 0) {
+      dispatch(takeCities());
+    }
   }, []);
 
   const { place, km, longitude, latitude } = formData;
@@ -101,7 +101,7 @@ const Landing = () => {
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <Suggestion place={place} fullList={listForSuggestions} />
+                  <Suggestion place={place} fullList={fullList} />
                 </div>
               </div>
             </div>

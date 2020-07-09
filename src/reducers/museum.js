@@ -30,7 +30,7 @@ export default function (state = initialState, action) {
     case TAKE_CITIES:
       return {
         ...state,
-        cities: payload.data,
+        cities: payload,
       };
     case UPDATE_SELECTED:
       return {

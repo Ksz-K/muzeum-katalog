@@ -9,7 +9,7 @@ export default () => (
         width: "75vw",
         marginLeft: "auto",
         marginRight: "auto",
-        marginTop: "15vh",
+        marginTop: 0,
         display: "block",
       }}
       alt="Loading..."

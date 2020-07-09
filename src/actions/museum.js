@@ -1,6 +1,7 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import { COUNT_MUSEUMS, WHERE_IS, TAKE_CITIES, UPDATE_SELECTED } from "./types";
+import removeDuplicatesBy from "../utils/removeDuplicates";
 
 //Count museums User
 export const countMuseums = () => async (dispatch) => {
@@ -34,9 +35,15 @@ export const whereVisitorIs = () => async (dispatch) => {
 //Obtain list of polish cities
 export const takeCities = () => async (dispatch) => {
   try {
-    const res = await axios.get(
+    const resDuplicated = await axios.get(
       "https://kszk-api.herokuapp.com/api/weather/poland/cities"
     );
+
+    const res = await removeDuplicatesBy(
+      (city) => city.name,
+      resDuplicated.data
+    );
+
     dispatch({
       type: TAKE_CITIES,
       payload: res,
