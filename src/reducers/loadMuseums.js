@@ -2,6 +2,7 @@ import {
   LOAD_2_SHOW,
   LOAD_NEAR_2_SHOW,
   LOADING_TRUE,
+  LOADING_FALSE,
   FILTER_REDUX,
   FILTER_MONGO,
 } from "../actions/types";
@@ -22,6 +23,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case LOADING_FALSE:
+      return {
+        ...state,
+        loading: false,
       };
     case FILTER_REDUX:
       return {

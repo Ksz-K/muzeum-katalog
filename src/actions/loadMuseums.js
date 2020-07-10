@@ -4,6 +4,7 @@ import {
   LOAD_2_SHOW,
   LOAD_NEAR_2_SHOW,
   LOADING_TRUE,
+  LOADING_FALSE,
   FILTER_REDUX,
   FILTER_MONGO,
 } from "./types";
@@ -13,6 +14,18 @@ export const loadingTrue = () => async (dispatch) => {
   try {
     dispatch({
       type: LOADING_TRUE,
+    });
+  } catch (error) {
+    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
+    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+  }
+};
+
+//Make loading FALSE
+export const loadingFalse = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: LOADING_FALSE,
     });
   } catch (error) {
     dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
@@ -80,7 +93,7 @@ export const filterMongo = ({ km, longitude, latitude, rating }) => async (
     const res = await axios.get(
       `api/v1/museums/radius/${longitude}-${latitude}/${codedKm}`
     );
-    console.log(res);
+
     dispatch({
       type: FILTER_MONGO,
       payload: res.data,

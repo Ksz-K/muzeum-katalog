@@ -21,6 +21,7 @@ export const LOAD_2_SHOW = "LOAD_2_SHOW";
 export const LOAD_NEAR_2_SHOW = "LOAD_NEAR_2_SHOW";
 
 export const LOADING_TRUE = "LOADING_TRUE";
+export const LOADING_FALSE = "LOADING_FALSE";
 
 export const FILTER_REDUX = "FILTER_REDUX";
 export const FILTER_MONGO = "FILTER_MONGO";

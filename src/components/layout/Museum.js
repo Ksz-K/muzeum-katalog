@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { loadingTrue } from "../../actions/loadMuseums";
 import cutText from "../../utils/cutText";
 
 const Museum = ({
@@ -12,6 +15,7 @@ const Museum = ({
   averageRating,
   paginationViewStatus,
 }) => {
+  const dispatch = useDispatch();
   return (
     <div className={`card mb-3 ${paginationViewStatus}`}>
       <div className="row no-gutters">
@@ -21,7 +25,10 @@ const Museum = ({
         <div className="col-md-8">
           <div className="card-body">
             <h5 className="card-title">
-              <Link to={`/${www_url}`} onClick={() => console.log(museumID)}>
+              <Link
+                to={`/museums/${www_url}`}
+                onClick={() => dispatch(loadingTrue())}
+              >
                 {name}
                 <span className="float-right badge badge-success">
                   {averageRating.toFixed(2)}
