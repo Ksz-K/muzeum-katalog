@@ -24,7 +24,7 @@ const Museum = ({
               <Link to={`/${www_url}`} onClick={() => console.log(museumID)}>
                 {name}
                 <span className="float-right badge badge-success">
-                  {averageRating}
+                  {averageRating.toFixed(2)}
                 </span>
               </Link>
             </h5>

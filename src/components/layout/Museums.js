@@ -1,7 +1,12 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { takeCities } from "../../actions/museum";
-import { load2show, loadNear2show } from "../../actions/loadMuseums";
+import {
+  load2show,
+  loadNear2show,
+  filterRedux,
+  filterMongo,
+} from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
 import Museum from "./Museum";
 import Suggestion from "./inputSuggestion";
@@ -14,10 +19,6 @@ const Museums = () => {
   const geoLocation = useSelector((state) => state.museum.visitorLocation);
   const citySelected = useSelector((state) => state.museum.citySelected);
   const loadMuseums = useSelector((state) => state.loadMuseums);
-
-  if (loadMuseums.returnedNo === 0) {
-    dispatch(setAlert("Wyszukiwanie zwróciło zero wyników", "primary"));
-  }
 
   useEffect(() => {
     if (fullList.length === 0) {
@@ -61,15 +62,19 @@ const Museums = () => {
   }, []);
 
   useEffect(() => {
-    if (!Object.keys(loadMuseums.pagination).length === 0) {
-      dispatch(
-        setAlert(
-          "Wyszukiwanie zwróciło ponad 40 prezentowanych wyników. Spróbuj zawęzić kryteria",
-          "primary"
-        )
-      );
+    if (
+      loadMuseums.museumsNo > loadMuseums.returnedNo &&
+      !loadMuseums.loading
+    ) {
+      !loadMuseums.preFilter &&
+        dispatch(
+          setAlert(
+            `Wyszukiwanie zwróciło ${loadMuseums.museumsNo} wyników. Prezentujemy ${loadMuseums.returnedNo} z nich. Spróbuj zawęzić kryteria`,
+            "primary"
+          )
+        );
     }
-  }, [loadMuseums.pagination]);
+  }, [loadMuseums.museumsNo]);
 
   const onChange = (e) => {
     if (e.target.value < 0) {
@@ -107,7 +112,37 @@ const Museums = () => {
       };
     }
 
-    dispatch(loadNear2show(params));
+    km && dispatch(loadNear2show(params));
+    setFormData({
+      ...formData,
+      rating: "",
+    });
+  };
+
+  const filterThem = async (e) => {
+    e.preventDefault();
+
+    if (loadMuseums.museumsNo === loadMuseums.returnedNo) {
+      rating && dispatch(filterRedux({ rating }));
+    } else {
+      let params = {};
+
+      if (citySelected !== null) {
+        params = {
+          km,
+          longitude: citySelected.coord.lon,
+          latitude: citySelected.coord.lat,
+        };
+      } else {
+        params = {
+          km,
+          longitude,
+          latitude,
+        };
+      }
+      console.log();
+      rating && dispatch(filterMongo({ ...params, rating }));
+    }
   };
 
   //Create logic for pagination
@@ -117,7 +152,10 @@ const Museums = () => {
   const pages = Array(Math.ceil(loadMuseums.returnedNo / 4)).fill(1);
 
   const { currentStart } = paginationLogic;
-
+  const highlighted = {
+    borderTop: "2px solid #00f",
+    borderBottom: "2px solid #00f",
+  };
   return (
     <section className="browse mb-5" style={{ marginTop: "10vh" }}>
       <div className="container  ">
@@ -134,6 +172,8 @@ const Museums = () => {
                         type="number"
                         className="form-control"
                         name="km"
+                        min="1"
+                        max="777"
                         value={km}
                         onChange={(e) => onChange(e)}
                         placeholder="km"
@@ -191,8 +231,7 @@ const Museums = () => {
                 value="Filtruj wyniki"
                 className="btn btn-primary btn-block"
                 onClick={(e) => {
-                  e.preventDefault();
-                  console.log(rating);
+                  filterThem(e);
                 }}
               />
             </form>
@@ -207,6 +246,17 @@ const Museums = () => {
               </Fragment>
             ) : (
               <Fragment>
+                {!loadMuseums.returnedNo && (
+                  <button
+                    type="button"
+                    className="btn btn-info btn-block mt-2"
+                    onClick={() => {
+                      dispatch(load2show());
+                    }}
+                  >
+                    System zwrócił zero wyników wyszukiwania
+                  </button>
+                )}
                 {loadMuseums.loaded.map((museum, index) => (
                   <Museum
                     key={museum._id}
@@ -235,7 +285,7 @@ const Museums = () => {
               <Fragment>
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
-                    {currentStart > 3 && (
+                    {currentStart > 1 && (
                       <li className="page-item">
                         <a
                           className="page-link"
@@ -254,7 +304,16 @@ const Museums = () => {
                     )}
 
                     {pages.map((page, index) => (
-                      <li className="page-item" key={index}>
+                      <li
+                        className="page-item"
+                        key={index}
+                        id={index}
+                        style={
+                          Math.ceil((currentStart * 1) / 4) === index * 1
+                            ? highlighted
+                            : null
+                        }
+                      >
                         <a
                           className="page-link  "
                           href="#!"

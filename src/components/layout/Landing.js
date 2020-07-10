@@ -97,6 +97,8 @@ const Landing = ({ history }) => {
                     type="number"
                     className="form-control"
                     name="km"
+                    min="1"
+                    max="777"
                     value={km}
                     onChange={(e) => onChange(e)}
                     placeholder="Obręb wyszukiwania w km"
