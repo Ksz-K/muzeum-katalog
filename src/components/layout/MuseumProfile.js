@@ -46,7 +46,7 @@ const MuseumProfile = ({ match }) => {
         name: museumLoaded.name,
         description: museumLoaded.description,
         expositions: museumLoaded.expositions,
-        averageRating: museumLoaded.averageRating,
+        averageRating: museumLoaded.averageRating.toFixed(2),
         website: museumLoaded.website,
         lng: museumLoaded.location.coordinates[0],
         lat: museumLoaded.location.coordinates[1],
@@ -54,9 +54,13 @@ const MuseumProfile = ({ match }) => {
 
       dispatch(loadingFalse());
     } else {
-      console.log("NIE MAMY");
+      loadBySlug();
     }
-  }, [profileData]);
+  }, [loadMuseums.loaded]);
+
+  const loadBySlug = () => {
+    dispatch(load2show(`?slug=${match.params.name}`));
+  };
 
   return (
     <Fragment>
@@ -99,7 +103,7 @@ const MuseumProfile = ({ match }) => {
                 {/* Rating */}
                 <h1 className="text-center my-4">
                   <span className="badge badge-secondary badge-success rounded-circle p-3">
-                    {profileData.averageRating.toFixed(2)}
+                    {profileData.averageRating}
                   </span>{" "}
                   Rating
                 </h1>
@@ -134,11 +138,13 @@ const MuseumProfile = ({ match }) => {
                 </h2>
                 {/* Map */}
                 <div style={{ width: "100%", height: "300px" }}>
-                  <MapBox
-                    lng={profileData.lng}
-                    lat={profileData.lat}
-                    title={profileData.name}
-                  />
+                  {profileData.lng && (
+                    <MapBox
+                      lng={profileData.lng}
+                      lat={profileData.lat}
+                      title={profileData.name}
+                    />
+                  )}
                 </div>
               </div>
             </div>
