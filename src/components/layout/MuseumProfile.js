@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import Exposition from "./Exposition";
 import { loadingTrue, loadingFalse } from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
@@ -14,6 +15,10 @@ const MuseumProfile = ({ match }) => {
   const [formData, setFormData] = useState({
     photo: "",
     name: "",
+    description: "",
+    expositions: [],
+    averageRating: "",
+    website: "",
   });
 
   useEffect(() => {
@@ -31,6 +36,8 @@ const MuseumProfile = ({ match }) => {
         name: museumLoaded.name,
         description: museumLoaded.description,
         expositions: museumLoaded.expositions,
+        averageRating: museumLoaded.averageRating,
+        website: museumLoaded.website,
       });
       dispatch(loadingFalse());
     } else {
@@ -38,7 +45,6 @@ const MuseumProfile = ({ match }) => {
     }
   }, []);
 
-  console.log(formData.name);
   return (
     <Fragment>
       {loadMuseums.loading === true ? (
@@ -60,36 +66,44 @@ const MuseumProfile = ({ match }) => {
                     <Spinner />
                   </Fragment>
                 ) : (
-                  formData.expositions.map((exposition) => <Exposition />)
+                  formData.expositions.map((exposition, index) => (
+                    <Exposition
+                      key={index}
+                      title={exposition.title}
+                      description={exposition.description}
+                    />
+                  ))
                 )}
               </div>
               {/* Sidebar   */}
               <div className="col-md-4">
                 Image
-                <img src="img/image_1.jpg" className="img-thumbnail" alt="" />
+                <img
+                  src={`http://localhost:5000/uploads/${formData.photo}`}
+                  className="img-thumbnail"
+                  alt=""
+                />
                 {/* Rating */}
                 <h1 className="text-center my-4">
                   <span className="badge badge-secondary badge-success rounded-circle p-3">
-                    8.8
+                    {formData.averageRating.toFixed(2)}
                   </span>{" "}
                   Rating
                 </h1>
                 {/* Buttons */}
-                <a href="reviews.html" className="btn btn-dark btn-block my-3">
-                  <i className="fas fa-comments"></i> Read Reviews
-                </a>
+                <Link to="/reviews" className="btn btn-dark btn-block my-3">
+                  <i className="fas fa-comments"></i> Opinie o muzeum
+                </Link>
+                <Link to="/addreview" className="btn btn-light btn-block my-3">
+                  <i className="fas fa-pencil-alt"></i> Napisz opinię
+                </Link>
                 <a
-                  href="add-review.html"
-                  className="btn btn-light btn-block my-3"
-                >
-                  <i className="fas fa-pencil-alt"></i> Write a Review
-                </a>
-                <a
-                  href="#"
+                  href={formData.website}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="btn btn-secondary btn-block my-3"
                 >
-                  <i className="fas fa-globe"></i> Visit Website
+                  <i className="fas fa-globe"></i> Strona www
                 </a>
                 {/* Map */}
                 <div id="map" style={{ width: "100%", height: "300px" }}></div>
