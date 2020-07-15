@@ -2,8 +2,10 @@ import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Exposition from "./Exposition";
+import MapBox from "./MapBox";
 import { loadingTrue, loadingFalse } from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
+
 import Spinner from "./Spinner";
 
 const MuseumProfile = ({ match }) => {
@@ -12,13 +14,16 @@ const MuseumProfile = ({ match }) => {
   const fullList = useSelector((state) => state.museum.cities);
   const loadMuseums = useSelector((state) => state.loadMuseums);
 
-  const [formData, setFormData] = useState({
+  const [profileData, setProfileData] = useState({
     photo: "",
     name: "",
     description: "",
     expositions: [],
     averageRating: "",
     website: "",
+    lng: "",
+    lat: "",
+    zoom: 7,
   });
 
   useEffect(() => {
@@ -30,15 +35,19 @@ const MuseumProfile = ({ match }) => {
       const museumLoaded = loadMuseums.loaded.filter(
         (museum) => museum.slug === match.params.name
       )[0];
-      setFormData({
-        ...formData,
+      setProfileData({
+        ...profileData,
         photo: museumLoaded.photo,
         name: museumLoaded.name,
         description: museumLoaded.description,
         expositions: museumLoaded.expositions,
         averageRating: museumLoaded.averageRating,
         website: museumLoaded.website,
+        lng: museumLoaded.location.coordinates[0],
+        lat: museumLoaded.location.coordinates[1],
       });
+
+       
       dispatch(loadingFalse());
     } else {
       console.log("NIE MAMY");
@@ -56,9 +65,9 @@ const MuseumProfile = ({ match }) => {
           <div className="container">
             <div className="row">
               <div className="col-md-8">
-                <h1>{formData.name}</h1>
+                <h1>{profileData.name}</h1>
 
-                <p>{formData.description}</p>
+                <p>{profileData.description}</p>
 
                 {/* Expositions   */}
                 {loadMuseums.loading === true ? (
@@ -66,7 +75,7 @@ const MuseumProfile = ({ match }) => {
                     <Spinner />
                   </Fragment>
                 ) : (
-                  formData.expositions.map((exposition, index) => (
+                  profileData.expositions.map((exposition, index) => (
                     <Exposition
                       key={index}
                       title={exposition.title}
@@ -79,14 +88,14 @@ const MuseumProfile = ({ match }) => {
               <div className="col-md-4">
                 Image
                 <img
-                  src={`http://localhost:5000/uploads/${formData.photo}`}
+                  src={`http://localhost:5000/uploads/${profileData.photo}`}
                   className="img-thumbnail"
                   alt=""
                 />
                 {/* Rating */}
                 <h1 className="text-center my-4">
                   <span className="badge badge-secondary badge-success rounded-circle p-3">
-                    {formData.averageRating.toFixed(2)}
+                    {profileData.averageRating.toFixed(2)}
                   </span>{" "}
                   Rating
                 </h1>
@@ -98,15 +107,23 @@ const MuseumProfile = ({ match }) => {
                   <i className="fas fa-pencil-alt"></i> Napisz opinię
                 </Link>
                 <a
-                  href={formData.website}
+                  href={profileData.website}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-secondary btn-block my-3"
                 >
                   <i className="fas fa-globe"></i> Strona www
                 </a>
+                <h2 className="text-center"><a href={`https://www.google.com/maps/dir//${profileData.lat},${profileData.lng}/@${profileData.lat},${profileData.lng},16z?hl=pl`}
+                target="_blank" class="badge badge-success"> Jak dojechać ? <span><i
+                    className="fas fa-route"></i></span></a>
+            </h2 >
                 {/* Map */}
-                <div id="map" style={{ width: "100%", height: "300px" }}></div>
+                <div
+                  style={{ width: "100%", height: "300px" }}
+                >
+                  <MapBox lng={profileData.lng} lat={profileData.lat} title={profileData.name} />
+                </div>
               </div>
             </div>
           </div>
