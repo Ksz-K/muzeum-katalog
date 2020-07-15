@@ -33,10 +33,10 @@ export const loadingFalse = () => async (dispatch) => {
   }
 };
 //Load museum 2 show
-export const load2show = () => async (dispatch) => {
+export const load2show = (query = "") => async (dispatch) => {
   dispatch(loadingTrue());
   try {
-    const res = await axios.get("/api/v1/museums/");
+    const res = await axios.get(`/api/v1/museums/${query}`);
     dispatch({
       type: LOAD_2_SHOW,
       payload: res.data,

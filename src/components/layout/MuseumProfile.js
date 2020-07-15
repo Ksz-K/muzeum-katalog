@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Exposition from "./Exposition";
 import MapBox from "./MapBox";
-import { loadingTrue, loadingFalse } from "../../actions/loadMuseums";
+import {
+  loadingTrue,
+  loadingFalse,
+  load2show,
+} from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
 
 import Spinner from "./Spinner";
@@ -35,6 +39,7 @@ const MuseumProfile = ({ match }) => {
       const museumLoaded = loadMuseums.loaded.filter(
         (museum) => museum.slug === match.params.name
       )[0];
+      console.log(museumLoaded);
       setProfileData({
         ...profileData,
         photo: museumLoaded.photo,
@@ -47,12 +52,11 @@ const MuseumProfile = ({ match }) => {
         lat: museumLoaded.location.coordinates[1],
       });
 
-       
       dispatch(loadingFalse());
     } else {
       console.log("NIE MAMY");
     }
-  }, []);
+  }, [profileData]);
 
   return (
     <Fragment>
@@ -114,15 +118,27 @@ const MuseumProfile = ({ match }) => {
                 >
                   <i className="fas fa-globe"></i> Strona www
                 </a>
-                <h2 className="text-center"><a href={`https://www.google.com/maps/dir//${profileData.lat},${profileData.lng}/@${profileData.lat},${profileData.lng},16z?hl=pl`}
-                target="_blank" class="badge badge-success"> Jak dojechać ? <span><i
-                    className="fas fa-route"></i></span></a>
-            </h2 >
+                <h2 className="text-center">
+                  <a
+                    href={`https://www.google.com/maps/dir//${profileData.lat},${profileData.lng}/@${profileData.lat},${profileData.lng},16z?hl=pl`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="badge badge-success"
+                  >
+                    {" "}
+                    Jak dojechać ?{" "}
+                    <span>
+                      <i className="fas fa-route"></i>
+                    </span>
+                  </a>
+                </h2>
                 {/* Map */}
-                <div
-                  style={{ width: "100%", height: "300px" }}
-                >
-                  <MapBox lng={profileData.lng} lat={profileData.lat} title={profileData.name} />
+                <div style={{ width: "100%", height: "300px" }}>
+                  <MapBox
+                    lng={profileData.lng}
+                    lat={profileData.lat}
+                    title={profileData.name}
+                  />
                 </div>
               </div>
             </div>
