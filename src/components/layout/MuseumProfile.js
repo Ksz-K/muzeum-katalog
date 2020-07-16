@@ -7,6 +7,7 @@ import {
   loadingTrue,
   loadingFalse,
   load2show,
+  setupLoaded,
 } from "../../actions/loadMuseums";
 import { setAlert } from "../../actions/alert";
 
@@ -53,6 +54,7 @@ const MuseumProfile = ({ match, history }) => {
         lat: museumLoaded.location.coordinates[1],
       });
 
+      dispatch(setupLoaded(museumLoaded));
       dispatch(loadingFalse());
     } else {
       loadBySlug();

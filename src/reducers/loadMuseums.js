@@ -5,6 +5,7 @@ import {
   LOADING_FALSE,
   FILTER_REDUX,
   FILTER_MONGO,
+  SETUP_LOADED,
 } from "../actions/types";
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
   museumsNo: null,
   returnedNo: null,
   preFilter: null,
+  showed: null,
 };
 
 export default function (state = initialState, action) {
@@ -59,9 +61,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
+        showed: null,
         loaded: payload.data,
         museumsNo: payload.museumsNo * 1,
         returnedNo: payload.count * 1,
+      };
+    case SETUP_LOADED:
+      return {
+        ...state,
+        showed: payload,
       };
 
     default:

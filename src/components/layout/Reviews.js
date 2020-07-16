@@ -1,8 +1,24 @@
-import React, { useEffect, useState, Fragment, useRef } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import Review from "./Review";
+import Spinner from "./Spinner";
+import { loadReviews } from "../../actions/loadReviews";
 
-const Reviews = () => {
+const Reviews = ({ history }) => {
+  const dispatch = useDispatch();
+
+  const showed = useSelector((state) => state.loadMuseums.showed);
+  const reviews = useSelector((state) => state.loadReviews);
+
+  if (!showed) {
+    history.push("/museums");
+  }
+
+  useEffect(() => {
+    dispatch(loadReviews(showed._id));
+  }, []);
+
   return (
     <section className="bootcamp" style={{ marginTop: "10vh" }}>
       <div className="container">
@@ -10,68 +26,45 @@ const Reviews = () => {
           {/* Main col   */}
           <div className="col-md-8">
             <Link
-              to="bootcamp.html"
-              target="_blank"
+              to={`/museums/${showed.slug}`}
               className="btn btn-secondary my-3"
             >
-              <i className="fas fa-chevron-left"></i> Bootcamp Info
+              <i className="fas fa-chevron-left"></i> Informacje o muzeum
             </Link>
-            <h1 className="mb-4">DevWorks Bootcamp Reviews</h1>
+            <h1 className="mb-4">{showed.name}</h1>
             {/* Reviews   */}
-            <div className="card mb-3">
-              <h5 className="card-header bg-dark text-white">
-                Fantastic Bootcamp
-              </h5>
-              <div className="card-body">
-                <h5 className="card-title">
-                  Rating: <span className="text-success">10</span>
-                </h5>
-                <p className="card-text">
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Commodi similique mollitia, praesentium, animi harum officia
-                  dolores corporis ex tempore consequuntur dolorem ullam dolorum
-                  magnam corrupti quaerat tempora repudiandae! Similique,
-                  molestiae. Iste, blanditiis recusandae unde tenetur eius
-                  exercitationem rerum a fuga.
-                </p>
-                <p className="text-muted">Writtern By Kevin Smith</p>
-              </div>
-            </div>
-
-            <div className="card mb-3">
-              <h5 className="card-header bg-dark text-white">Learned a Lot</h5>
-              <div className="card-body">
-                <h5 className="card-title">
-                  Rating: <span className="text-success">9</span>
-                </h5>
-                <p className="card-text">
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Commodi similique mollitia, praesentium, animi harum officia
-                  dolores corporis ex tempore consequuntur dolorem ullam dolorum
-                  magnam corrupti quaerat tempora repudiandae! Similique,
-                  molestiae. Iste, blanditiis recusandae unde tenetur eius
-                  exercitationem rerum a fuga.
-                </p>
-                <p className="text-muted">Writtern By Jill Samson</p>
-              </div>
-            </div>
+            {reviews.loading === true ? (
+              <Fragment>
+                <Spinner />
+              </Fragment>
+            ) : (
+              <Fragment>
+                {reviews.loaded.map((review) => (
+                  <Review
+                    key={review._id}
+                    title={review.title}
+                    text={review.text}
+                    rating={review.rating}
+                    when={review.createdAt}
+                    userName={review.user.name}
+                  />
+                ))}
+              </Fragment>
+            )}
           </div>
           {/* Sidebar   */}
           <div className="col-md-4">
             {/* Rating   */}
             <h1 className="text-center my-4">
               <span className="badge badge-secondary badge-success rounded-circle p-3">
-                8.8
+                {showed.averageRating}
               </span>
-              Rating
+              Średnia ocen
             </h1>
 
-            <a
-              href="add-review.html"
-              className="btn btn-primary btn-block my-3"
-            >
-              <i className="fas fa-pencil-alt"></i> Review This Bootcamp
-            </a>
+            <Link to="/addreview" className="btn btn-primary btn-block my-3">
+              <i className="fas fa-pencil-alt"></i> Zamieść swoją ocenę
+            </Link>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import {
   LOADING_FALSE,
   FILTER_REDUX,
   FILTER_MONGO,
+  SETUP_LOADED,
 } from "./types";
 
 //Make loading TRUE
@@ -32,6 +33,19 @@ export const loadingFalse = () => async (dispatch) => {
     dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
   }
 };
+
+//SETUP loaded
+export const setupLoaded = (loaded) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SETUP_LOADED,
+      payload: loaded,
+    });
+  } catch (error) {
+    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
+    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+  }
+};
 //Load museum 2 show
 export const load2show = (query = "") => async (dispatch) => {
   dispatch(loadingTrue());
@@ -47,7 +61,7 @@ export const load2show = (query = "") => async (dispatch) => {
   }
 };
 
-//Load museum 2 show
+//Load museum 2 near distance show
 export const loadNear2show = ({ km, longitude, latitude }) => async (
   dispatch
 ) => {
