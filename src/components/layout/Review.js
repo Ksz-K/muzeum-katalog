@@ -1,4 +1,5 @@
 import React from "react";
+import Moment from "react-moment";
 
 const Review = ({ title, text, rating, when, userName }) => {
   return (
@@ -10,7 +11,8 @@ const Review = ({ title, text, rating, when, userName }) => {
         </h5>
         <p className="card-text">{text}</p>
         <p className="text-muted">
-          Zamieszczono {when} przez {userName}
+          Zamieszczono <Moment format="DD/MMM/YYYY HH:MM:SS">{when}</Moment>{" "}
+          przez {userName}
         </p>
       </div>
     </div>

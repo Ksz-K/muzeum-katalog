@@ -19,6 +19,11 @@ const Reviews = ({ history }) => {
     dispatch(loadReviews(showed._id));
   }, []);
 
+  const loadMore = () => {
+    const skip = (reviews.loaded.length / 2) * 1;
+    dispatch(loadReviews(showed._id, skip));
+  };
+
   return (
     <section className="bootcamp" style={{ marginTop: "10vh" }}>
       <div className="container">
@@ -49,6 +54,27 @@ const Reviews = ({ history }) => {
                     userName={review.user.name}
                   />
                 ))}
+                {
+                  <button
+                    className="btn btn-primary btn-lg btn-block"
+                    onClick={loadMore}
+                    disabled={!(reviews.loaded.length - reviews.reviewsNo)}
+                  >
+                    Załadowano {reviews.loaded.length} z {reviews.reviewsNo}{" "}
+                    opinii.{" "}
+                    <span
+                      className="font-weight-lighter font-italic"
+                      style={{
+                        display:
+                          reviews.loaded.length - reviews.reviewsNo
+                            ? ""
+                            : "none",
+                      }}
+                    >
+                      Kliknij aby załadować kolejne
+                    </span>
+                  </button>
+                }
               </Fragment>
             )}
           </div>

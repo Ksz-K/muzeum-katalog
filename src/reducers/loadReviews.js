@@ -1,4 +1,4 @@
-import { LOAD_REVIEWS } from "../actions/types";
+import { LOAD_REVIEWS, CLEAN_REVIEWS } from "../actions/types";
 
 const initialState = {
   loading: true,
@@ -21,6 +21,11 @@ export default function (state = initialState, action) {
         loaded: [...state.loaded, ...payload.data],
         reviewsNo: payload.total * 1,
         returnedNo: payload.count * 1,
+      };
+    case CLEAN_REVIEWS:
+      return {
+        ...state,
+        loaded: [],
       };
 
     default:

@@ -1,11 +1,21 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_REVIEWS } from "./types";
+import { LOAD_REVIEWS, CLEAN_REVIEWS } from "./types";
 
+//Clean reviews
+export const cleanReviews = () => (dispatch) => {
+  dispatch({
+    type: CLEAN_REVIEWS,
+  });
+};
 //Load reviews 2 show
-export const loadReviews = (id, query = "") => async (dispatch) => {
+export const loadReviews = (id, skip = 0) => async (dispatch) => {
+  if (skip === 0) {
+    dispatch(cleanReviews());
+  }
   try {
-    const res = await axios.get(`api/v1/museums/${id}/reviews/${query}`);
+    const res = await axios.get(`api/v1/museums/${id}-${skip}/reviews/`);
+
     dispatch({
       type: LOAD_REVIEWS,
       payload: res.data,

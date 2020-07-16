@@ -28,3 +28,4 @@ export const FILTER_REDUX = "FILTER_REDUX";
 export const FILTER_MONGO = "FILTER_MONGO";
 
 export const LOAD_REVIEWS = "LOAD_REVIEWS";
+export const CLEAN_REVIEWS = "CLEAN_REVIEWS";
