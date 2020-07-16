@@ -31,7 +31,7 @@ const Museum = ({
               >
                 {name}
                 <span className="float-right badge badge-success">
-                  {averageRating.toFixed(2)}
+                  {averageRating}
                 </span>
               </Link>
             </h5>

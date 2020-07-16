@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState, Fragment, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Exposition from "./Exposition";
@@ -12,7 +12,7 @@ import { setAlert } from "../../actions/alert";
 
 import Spinner from "./Spinner";
 
-const MuseumProfile = ({ match }) => {
+const MuseumProfile = ({ match, history }) => {
   const dispatch = useDispatch();
 
   const fullList = useSelector((state) => state.museum.cities);
@@ -28,6 +28,7 @@ const MuseumProfile = ({ match }) => {
     lng: "",
     lat: "",
     zoom: 7,
+    ifError: 0,
   });
 
   useEffect(() => {
@@ -39,14 +40,14 @@ const MuseumProfile = ({ match }) => {
       const museumLoaded = loadMuseums.loaded.filter(
         (museum) => museum.slug === match.params.name
       )[0];
-      console.log(museumLoaded);
+
       setProfileData({
         ...profileData,
         photo: museumLoaded.photo,
         name: museumLoaded.name,
         description: museumLoaded.description,
         expositions: museumLoaded.expositions,
-        averageRating: museumLoaded.averageRating.toFixed(2),
+        averageRating: museumLoaded.averageRating,
         website: museumLoaded.website,
         lng: museumLoaded.location.coordinates[0],
         lat: museumLoaded.location.coordinates[1],
@@ -58,7 +59,12 @@ const MuseumProfile = ({ match }) => {
     }
   }, [loadMuseums.loaded]);
 
-  const loadBySlug = () => {
+  const loadBySlug = async () => {
+    setProfileData({ ...profileData, ifError: profileData.ifError + 1 });
+    if (profileData.ifError > 7) {
+      console.log(profileData.ifError);
+      history.push("/pageNotFound");
+    }
     dispatch(load2show(`?slug=${match.params.name}`));
   };
 
@@ -94,7 +100,6 @@ const MuseumProfile = ({ match }) => {
               </div>
               {/* Sidebar   */}
               <div className="col-md-4">
-                Image
                 <img
                   src={`http://localhost:5000/uploads/${profileData.photo}`}
                   className="img-thumbnail"
@@ -105,7 +110,7 @@ const MuseumProfile = ({ match }) => {
                   <span className="badge badge-secondary badge-success rounded-circle p-3">
                     {profileData.averageRating}
                   </span>{" "}
-                  Rating
+                  Średnia ocen
                 </h1>
                 {/* Buttons */}
                 <Link to="/reviews" className="btn btn-dark btn-block my-3">

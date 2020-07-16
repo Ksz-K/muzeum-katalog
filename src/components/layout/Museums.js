@@ -204,8 +204,39 @@ const Museums = () => {
                 </button>
               )}
             </div>
+            <div className="card card-body mb-4">
+              <h4 className="mb-3">Aktywny filtr wyszukiwania</h4>
+              <span className="badge badge-primary">
+                Miejscowość:{" "}
+                {citySelected !== null ? citySelected.name : geoLocation.city}
+              </span>
+              <span className="badge my-1  badge-secondary">
+                Obszar: {km || "niezdefiniowano"} {km && <span>km</span>}
+              </span>
+              <span className="badge my-1  badge-success">
+                Załadowono obiektów: {loadMuseums.museumsNo}
+              </span>
+              <span className="badge my-1  badge-danger">
+                Obiekty prezentowane: {loadMuseums.returnedNo}
+              </span>
+              <span className="badge my-1  badge-info">
+                Ocena: {rating || "niezdefiniowano"}{" "}
+              </span>
 
-            <h4>Filter</h4>
+              {1 && (
+                <button
+                  type="button"
+                  className="btn btn-dark btn-block mt-2"
+                  onClick={() => {
+                    dispatch(load2show());
+                  }}
+                >
+                  Resetuj wyszukiwanie
+                </button>
+              )}
+            </div>
+
+            <h4>Filtr</h4>
             <form>
               <div className="form-group">
                 <label style={rating ? { display: "none" } : {}}> Ocena</label>
