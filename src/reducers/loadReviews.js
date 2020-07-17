@@ -1,4 +1,4 @@
-import { LOAD_REVIEWS, CLEAN_REVIEWS } from "../actions/types";
+import { LOAD_REVIEWS, CLEAN_REVIEWS, CREATE_REVIEW } from "../actions/types";
 
 const initialState = {
   loading: true,
@@ -6,8 +6,8 @@ const initialState = {
   reviewsNo: null,
   returnedNo: null,
   preFilter: null,
-  showed: null,
   userTotalReviews: 0,
+  isReviewer: [],
 };
 
 export default function (state = initialState, action) {
@@ -22,13 +22,20 @@ export default function (state = initialState, action) {
         loaded: [...state.loaded, ...payload.data],
         reviewsNo: payload.total * 1,
         returnedNo: payload.count * 1,
-        userTotalReviews: payload.countUserReview,
+        userTotalReviews: payload.countUserReview
+          ? payload.countUserReview
+          : state.userTotalReviews,
+        isReviewer: payload.isReviewer ? payload.isReviewer : state.isReviewer,
       };
 
     case CLEAN_REVIEWS:
       return {
         ...state,
         loaded: [],
+      };
+    case CREATE_REVIEW:
+      return {
+        ...state,
       };
 
     default:

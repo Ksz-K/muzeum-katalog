@@ -150,6 +150,7 @@ export const requestRestore = (email) => async (dispatch) => {
     }
   }
 };
+
 //Restore forgotten password of user
 export const restorePassword = (newPassword, token) => async (dispatch) => {
   const config = {

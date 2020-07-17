@@ -14,6 +14,7 @@ import RestorePassword from "./components/auth/RestorePassword";
 import Museums from "./components/layout/Museums";
 import MuseumProfile from "./components/layout/MuseumProfile";
 import Reviews from "./components/layout/Reviews";
+import AddReview from "./components/layout/AddReview";
 import Alert from "./components/layout/Alert";
 import { loadUser } from "./actions/auth";
 import { whereVisitorIs } from "./actions/museum";
@@ -60,6 +61,7 @@ const App = () => {
               path="/manageaccount"
               component={ManageAccount}
             />
+            <PrivateRoute exact path="/addreview" component={AddReview} />
           </Switch>
         </Fragment>
       </Router>

@@ -38,7 +38,7 @@ const Navbar = ({
           className="badge badge-light"
           style={{ pointerEvents: "none", padding: 8, margin: 8 }}
         >
-          Ilość opinii: {counter}
+          Ilość opinii: {usersReviews}
         </span>
       </li>
       <li className="nav-item dropdown">

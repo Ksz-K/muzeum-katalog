@@ -17,7 +17,7 @@ const Reviews = ({ history }) => {
   }
 
   useEffect(() => {
-    dispatch(loadReviews(showed._id));
+    dispatch(loadReviews(showed._id, 0, auth.user._id));
   }, []);
 
   const loadMore = () => {
@@ -89,16 +89,30 @@ const Reviews = ({ history }) => {
               </span>
               Średnia ocen
             </h1>
-
-            <Link
-              to="/addreview"
-              className="btn btn-primary btn-block my-3"
-              style={{
-                display: auth.user.role === "user" ? "auto" : "none",
-              }}
-            >
-              <i className="fas fa-pencil-alt"></i> Zamieść swoją opinię
-            </Link>
+            {reviews.isReviewer.length > 0 ? (
+              <Fragment>
+                <Link
+                  to="/addreview"
+                  className="btn btn-primary btn-block my-3"
+                >
+                  <i className="fas fa-pencil-alt"></i>
+                  &nbsp;Edytuj swoją opinię
+                </Link>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Link
+                  to="/addreview"
+                  className="btn btn-primary btn-block my-3"
+                  style={{
+                    display: auth.user.role === "user" ? "auto" : "none",
+                  }}
+                >
+                  <i className="fas fa-pencil-alt"></i>
+                  &nbsp;Napisz opinię
+                </Link>
+              </Fragment>
+            )}
           </div>
         </div>
       </div>
