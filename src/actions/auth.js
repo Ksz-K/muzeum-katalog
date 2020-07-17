@@ -9,6 +9,8 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   UPDATE_PASSWORD,
+  REQUEST_RESTORE,
+  RESTORE_PASSWORD,
   ACTION_PENDING,
   MANAGE_ACCOUNT,
 } from "./types";
@@ -115,6 +117,56 @@ export const updatePassword = ({ currentPassword, newPassword }) => async (
 
     dispatch({
       type: UPDATE_PASSWORD,
+      payload: res.data,
+    });
+    dispatch(setAlert("Hasło zostało pomyślnie zaktualizowane", "success"));
+    dispatch(loadUser());
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+  }
+};
+
+//Request restore forgotten password of user
+export const requestRestore = (email) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const body = { email };
+  try {
+    await axios.post(`/api/v1/auth/forgotpassword`, body, config);
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      console.log(errors);
+    }
+  }
+};
+//Restore forgotten password of user
+export const restorePassword = (newPassword, token) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const res = await axios.put(
+      `/api/v1/auth/resetpassword/${token}`,
+      { password: newPassword },
+      config
+    );
+
+    dispatch({
+      type: RESTORE_PASSWORD,
       payload: res.data,
     });
     dispatch(setAlert("Hasło zostało pomyślnie zaktualizowane", "success"));

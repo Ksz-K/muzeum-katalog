@@ -32,7 +32,7 @@ const ManageAccount = () => {
     return <Redirect to="/" />;
   }
   return (
-    <section className="container mt-5">
+    <section className="container" style={{ marginTop: "10vh" }}>
       <div className="row">
         <div className="col-md-8 m-auto">
           <div className="card bg-white py-2 px-4">

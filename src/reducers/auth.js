@@ -9,6 +9,7 @@ import {
   UPDATE_PASSWORD,
   ACTION_PENDING,
   MANAGE_ACCOUNT,
+  RESTORE_PASSWORD,
 } from "../actions/types";
 
 const initialState = {
@@ -33,6 +34,7 @@ export default function (state = initialState, action) {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
+    case RESTORE_PASSWORD:
       localStorage.setItem("token", payload.token);
       return {
         ...state,

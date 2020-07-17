@@ -1,7 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 import Moment from "react-moment";
+import { useSelector } from "react-redux";
 
-const Review = ({ title, text, rating, when, userName }) => {
+const Review = ({ title, text, rating, when, userName, userID }) => {
+  const auth = useSelector((state) => state.auth);
+
   return (
     <div className="card mb-3">
       <h5 className="card-header bg-dark text-white">{title}</h5>
@@ -14,6 +18,20 @@ const Review = ({ title, text, rating, when, userName }) => {
           Zamieszczono <Moment format="DD/MMM/YYYY HH:MM:SS">{when}</Moment>{" "}
           przez {userName}
         </p>
+        {auth.isAuthenticated && auth.user._id === userID && (
+          <Fragment>
+            {" "}
+            <Link
+              to="/addreview"
+              className="btn btn-primary btn-block my-3"
+              style={{
+                display: auth.user.role === "user" ? "auto" : "none",
+              }}
+            >
+              <i className="fas fa-pencil-alt"></i> Edytuj swoją opinię
+            </Link>
+          </Fragment>
+        )}
       </div>
     </div>
   );

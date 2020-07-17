@@ -10,6 +10,7 @@ import Login from "./components/auth/Login";
 import ManageAccount from "./components/auth/ManageAccount";
 import ResetPassword from "./components/auth/ResetPassword";
 import UpdatePassword from "./components/auth/UpdatePassword";
+import RestorePassword from "./components/auth/RestorePassword";
 import Museums from "./components/layout/Museums";
 import MuseumProfile from "./components/layout/MuseumProfile";
 import Reviews from "./components/layout/Reviews";
@@ -41,6 +42,11 @@ const App = () => {
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/resetpassword" component={ResetPassword} />
+            <Route
+              exact
+              path="/resetpassword/:id"
+              component={RestorePassword}
+            />
             <Route exact path="/reviews" component={Reviews} />
             <Route exact path="/museums" component={Museums} />
             <Route exact path="/museums/:name" component={MuseumProfile} />

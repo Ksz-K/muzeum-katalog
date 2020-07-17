@@ -7,6 +7,7 @@ const initialState = {
   returnedNo: null,
   preFilter: null,
   showed: null,
+  userTotalReviews: 0,
 };
 
 export default function (state = initialState, action) {
@@ -21,7 +22,9 @@ export default function (state = initialState, action) {
         loaded: [...state.loaded, ...payload.data],
         reviewsNo: payload.total * 1,
         returnedNo: payload.count * 1,
+        userTotalReviews: payload.countUserReview,
       };
+
     case CLEAN_REVIEWS:
       return {
         ...state,

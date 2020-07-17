@@ -18,6 +18,7 @@ const MuseumProfile = ({ match, history }) => {
 
   const fullList = useSelector((state) => state.museum.cities);
   const loadMuseums = useSelector((state) => state.loadMuseums);
+  const auth = useSelector((state) => state.auth);
 
   const [profileData, setProfileData] = useState({
     photo: "",
@@ -118,8 +119,17 @@ const MuseumProfile = ({ match, history }) => {
                 <Link to="/reviews" className="btn btn-dark btn-block my-3">
                   <i className="fas fa-comments"></i> Opinie o muzeum
                 </Link>
-                <Link to="/addreview" className="btn btn-light btn-block my-3">
-                  <i className="fas fa-pencil-alt"></i> Napisz opinię
+                <Link
+                  to="/addreview"
+                  className="btn btn-light btn-block my-3"
+                  style={{
+                    pointerEvents: auth.user.role === "user" ? "auto" : "none",
+                  }}
+                >
+                  <i className="fas fa-pencil-alt"></i>{" "}
+                  {auth.user.role === "user"
+                    ? "Napisz opinię"
+                    : "Aby napisać opinie zaloguj się jako Zwiedzający "}
                 </Link>
                 <a
                   href={profileData.website}

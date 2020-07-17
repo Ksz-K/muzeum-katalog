@@ -1,15 +1,19 @@
 import React, { Fragment, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
 import { countMuseums } from "../../actions/museum";
+import { loadReviews } from "../../actions/loadReviews";
 
 const Navbar = ({
+  history,
   auth: { isAuthenticated, loading, user },
   logout,
   museum: { counter },
   countMuseums,
+  loadReviews,
+  usersReviews,
 }) => {
   const authLinks = (
     <ul className="navbar-nav ml-auto">
@@ -29,6 +33,14 @@ const Navbar = ({
           {user.role === "user" ? "Zwiedzający" : "Muzealnik"}
         </span>
       </li>
+      <li className="nav-item">
+        <span
+          className="badge badge-light"
+          style={{ pointerEvents: "none", padding: 8, margin: 8 }}
+        >
+          Ilość opinii: {counter}
+        </span>
+      </li>
       <li className="nav-item dropdown">
         <a
           className="nav-link dropdown-toggle"
@@ -40,27 +52,54 @@ const Navbar = ({
           <i className="fas fa-user"></i> Konto
         </a>
         <div className="dropdown-menu">
-          <Link className="dropdown-item" to="/managemuseums">
-            Twoje Muzea
+          <Link
+            className="dropdown-item"
+            to="/managemuseums"
+            style={{
+              display: user.role === "publisher" ? "auto" : "none",
+            }}
+          >
+            Twoje Muzeum
           </Link>
-          <Link className="dropdown-item" to="/managereviews">
+          <Link
+            className="dropdown-item"
+            to="/managereviews"
+            style={{
+              display: user.role === "user" ? "auto" : "none",
+            }}
+          >
             Twoje Opinie
           </Link>
           <Link className="dropdown-item" to="/manageaccount">
             Twoje Konto
           </Link>
           <div className="dropdown-divider"></div>
-          <a className="dropdown-item" onClick={logout} href="#!">
+          <a
+            className="dropdown-item"
+            onClick={() => {
+              logout();
+              history.push("/");
+            }}
+            href="#!"
+          >
             <i className="fas fa-sign-out-alt"></i> Wyloguj
           </a>
         </div>
+      </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/museums">
+          Nasze Muzea
+        </Link>
       </li>
     </ul>
   );
 
   useEffect(() => {
     countMuseums();
-  }, []);
+    if (user._id) {
+      loadReviews("123456789012345678901234", 0, user._id);
+    }
+  }, [user._id]);
 
   const guestLinks = (
     <ul className="navbar-nav ml-auto">
@@ -127,10 +166,14 @@ const Navbar = ({
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
   countMuseums: PropTypes.func.isRequired,
+  loadReviews: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
   auth: state.auth,
   museum: state.museum,
+  usersReviews: state.loadReviews.userTotalReviews,
 });
-export default connect(mapStateToProps, { logout, countMuseums })(Navbar);
+export default connect(mapStateToProps, { logout, countMuseums, loadReviews })(
+  withRouter(Navbar)
+);

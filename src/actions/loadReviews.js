@@ -9,12 +9,14 @@ export const cleanReviews = () => (dispatch) => {
   });
 };
 //Load reviews 2 show
-export const loadReviews = (id, skip = 0) => async (dispatch) => {
+export const loadReviews = (id, skip = 0, user = "") => async (dispatch) => {
   if (skip === 0) {
     dispatch(cleanReviews());
   }
   try {
-    const res = await axios.get(`api/v1/museums/${id}-${skip}/reviews/`);
+    const res = await axios.get(
+      `api/v1/museums/${id}-${skip}-${user}/reviews/`
+    );
 
     dispatch({
       type: LOAD_REVIEWS,

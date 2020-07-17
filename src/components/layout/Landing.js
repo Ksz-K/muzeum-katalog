@@ -20,7 +20,14 @@ const Landing = ({ history }) => {
   });
 
   useEffect(() => {
-    if (geoLocation.country_name !== undefined) {
+    if (citySelected !== null) {
+      setFormData({
+        place: citySelected.name,
+        km: "",
+        longitude: citySelected.coord.lon,
+        latitude: citySelected.coord.lat,
+      });
+    } else if (geoLocation.country_name !== undefined) {
       setFormData({
         place: `${geoLocation.country_name}-${geoLocation.region_name}-${geoLocation.city}`,
         km: "",

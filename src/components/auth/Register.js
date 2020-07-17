@@ -36,7 +36,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   }
 
   return (
-    <section className="form mt-5">
+    <section className="form" style={{ marginTop: "10vh" }}>
       <div className="container">
         <div className="row">
           <div className="col-md-6 m-auto">

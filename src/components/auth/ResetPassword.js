@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { requestRestore } from "../../actions/auth";
+import { setAlert } from "../../actions/alert";
 
-const ResetPassword = () => {
+const ResetPassword = ({ history }) => {
   const [formData, setFormData] = useState({
     email: "",
   });
 
   const { email } = formData;
+  const dispatch = useDispatch();
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,10 +18,18 @@ const ResetPassword = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(email);
+    dispatch(
+      setAlert(
+        "Po zweryfikowaniu adresu e-mail, link do resetu hasła zostanie wysłany",
+        "primary"
+      )
+    );
+    dispatch(requestRestore(email));
+
+    history.push("/");
   };
   return (
-    <section className="container mt-5">
+    <section className="container" style={{ marginTop: "10vh" }}>
       <div className="row">
         <div className="col-md-8 m-auto">
           <div className="card bg-white py-2 px-4">
@@ -29,6 +41,7 @@ const ResetPassword = () => {
                 Wpisz adres email, który został użyty podczas rejestracji do
                 serwisu.
               </p>
+              <p> Na ten adres przyjdzie e-mail z linkiem do resetu hasła.</p>
               <form onSubmit={(e) => onSubmit(e)}>
                 <div className="form-group">
                   <input
@@ -45,7 +58,7 @@ const ResetPassword = () => {
                 <div className="form-group">
                   <input
                     type="submit"
-                    value="Reset hasła"
+                    value="Wyślij e-mail z linkiem"
                     className="btn btn-dark btn-block"
                   />
                 </div>

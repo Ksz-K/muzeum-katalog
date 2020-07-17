@@ -10,6 +10,7 @@ const Reviews = ({ history }) => {
 
   const showed = useSelector((state) => state.loadMuseums.showed);
   const reviews = useSelector((state) => state.loadReviews);
+  const auth = useSelector((state) => state.auth);
 
   if (!showed) {
     history.push("/museums");
@@ -52,6 +53,7 @@ const Reviews = ({ history }) => {
                     rating={review.rating}
                     when={review.createdAt}
                     userName={review.user.name}
+                    userID={review.user._id}
                   />
                 ))}
                 {
@@ -88,8 +90,14 @@ const Reviews = ({ history }) => {
               Średnia ocen
             </h1>
 
-            <Link to="/addreview" className="btn btn-primary btn-block my-3">
-              <i className="fas fa-pencil-alt"></i> Zamieść swoją ocenę
+            <Link
+              to="/addreview"
+              className="btn btn-primary btn-block my-3"
+              style={{
+                display: auth.user.role === "user" ? "auto" : "none",
+              }}
+            >
+              <i className="fas fa-pencil-alt"></i> Zamieść swoją opinię
             </Link>
           </div>
         </div>
