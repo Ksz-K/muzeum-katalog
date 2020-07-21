@@ -35,14 +35,17 @@ const Navbar = ({
           {user.role === "user" ? "Zwiedzający" : "Muzealnik"}
         </span>
       </li>
-      <li className="nav-item">
-        <span
-          className="badge badge-light"
-          style={{ pointerEvents: "none", padding: 8, margin: 8 }}
-        >
-          Ilość opinii: {usersReviews}
-        </span>
-      </li>
+      {usersReviews ? (
+        <li className="nav-item">
+          <span
+            className="badge badge-light"
+            style={{ pointerEvents: "none", padding: 8, margin: 8 }}
+          >
+            Ilość opinii: {usersReviews}
+          </span>
+        </li>
+      ) : null}
+
       <li className="nav-item dropdown">
         <a
           className="nav-link dropdown-toggle"
@@ -55,7 +58,13 @@ const Navbar = ({
         </a>
         <div className="dropdown-menu">
           {user.role === "publisher" ? (
-            <Link className="dropdown-item" to="/managemuseums">
+            <Link
+              className="dropdown-item"
+              to="/managemuseums"
+              onClick={() => {
+                load2show(`?user=${user._id}`, "owner");
+              }}
+            >
               Twoje Muzeum
             </Link>
           ) : usersReviews ? (

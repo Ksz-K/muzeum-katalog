@@ -1,0 +1,200 @@
+import React, { useEffect, useState, Fragment } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  createMuseum,
+  updateMuseum,
+  deleteMuseum,
+} from "../../actions/loadMuseums";
+import Spinner from "./Spinner";
+
+const AddMuseum = ({ history }) => {
+  const dispatch = useDispatch();
+
+  // const showed = useSelector((state) => state.loadMuseums.showed);
+  // const loadMuseumStatus = useSelector((state) => state.loadMuseums.loading);
+  // const reviews = useSelector((state) => state.loadReviews);
+
+  if (1 > 2) {
+    history.push("/museums");
+  }
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    website: "",
+    phone: "",
+    email: "",
+    address: "",
+  });
+
+  // useEffect(() => {
+  //   if (4> 8) {
+  //     setFormData({
+  //       name: "",
+  //       description: "",
+  //       website: "",
+  //       phone: "",
+  //       email: "",
+  //       address: "",
+  //     });
+  //   }
+  // }, [reviews]);
+
+  const { name, description, website, phone, email, address } = formData;
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (7 > 6) {
+      console.log(formData);
+      // dispatch(updateReview(title, text, rating, reviews.isReviewer[0]._id));
+    } else {
+      // dispatch(createReview(title, text, rating, showed._id));
+    }
+    // history.push("/reviews");
+  };
+
+  return (
+    <Fragment>
+      {1 > 3 ? (
+        <Fragment>
+          <Spinner />
+        </Fragment>
+      ) : (
+        <Fragment>
+          <section className="container" style={{ marginTop: "10vh" }}>
+            <h1 className="mb-2">Dodaj Muzeum</h1>
+            <form onSubmit={(e) => onSubmit(e)}>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="card bg-white py-2 px-4">
+                    <div className="card-body">
+                      <h3>Lokalizacja i dane kontaktowe</h3>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="name"
+                          value={name}
+                          onChange={(e) => onChange(e)}
+                          className="form-control"
+                          required
+                        />{" "}
+                        <label style={name ? { display: "none" } : {}}>
+                          Nazwa
+                        </label>
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="address"
+                          value={address}
+                          onChange={(e) => onChange(e)}
+                          className="form-control"
+                          required
+                        />{" "}
+                        <label style={address ? { display: "none" } : {}}>
+                          Adres
+                        </label>
+                        <small className="form-text text-muted">
+                          Prosimy podać wraz z numerem ulicy
+                        </small>
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="number"
+                          min="100000000"
+                          max="999999999"
+                          name="phone"
+                          value={phone}
+                          onChange={(e) => onChange(e)}
+                          className="form-control"
+                        />{" "}
+                        <label style={phone ? { display: "none" } : {}}>
+                          Telefon kontaktowy
+                        </label>
+                        <small className="form-text text-muted">
+                          Tylko cyfry np: 223334455 lub 500600700
+                        </small>
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="email"
+                          name="email"
+                          value={email}
+                          onChange={(e) => onChange(e)}
+                          className="form-control"
+                        />{" "}
+                        <label style={email ? { display: "none" } : {}}>
+                          Adres e-mail
+                        </label>
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="url"
+                          name="website"
+                          value={website}
+                          pattern="https?://.+"
+                          onChange={(e) => onChange(e)}
+                          size="30"
+                          className="form-control"
+                        />{" "}
+                        <label style={website ? { display: "none" } : {}}>
+                          Adres witryny webowej
+                        </label>
+                        <small className="form-text text-muted">
+                          Musi zaczynać się od https:// lub http://
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="card bg-white py-2 px-4">
+                    <div className="card-body">
+                      <h3>Opis muzeum</h3>
+                      <div className="form-group">
+                        <textarea
+                          name="description"
+                          value={description}
+                          onChange={(e) => onChange(e)}
+                          rows="8"
+                          className="form-control"
+                          placeholder="Opisz Muzeum w kilku słowach"
+                          maxLength="1500"
+                        ></textarea>
+                        <small className="form-text text-muted">
+                          Treść nie może być dłuższa niż 1500 znaków
+                        </small>
+                      </div>
+                      <p className="text-muted my-4">
+                        *Po dodaniu Muzeum będzie można utworzyć związane z nim
+                        wystawy
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="form-group">
+                <input
+                  type="submit"
+                  value="Zapisz muzeum"
+                  className="btn btn-success btn-block my-4"
+                />
+                <Link
+                  to="/managemuseums"
+                  className="btn btn-primary btn-block mb-4"
+                >
+                  Powrót do panelu zarządzania Muzeum
+                </Link>
+              </div>
+            </form>
+          </section>
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
+export default AddMuseum;

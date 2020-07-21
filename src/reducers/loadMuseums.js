@@ -6,6 +6,9 @@ import {
   FILTER_REDUX,
   FILTER_MONGO,
   SETUP_LOADED,
+  CREATE_MUSEUM,
+  UPDATE_MUSEUM,
+  DELETE_MUSEUM,
 } from "../actions/types";
 
 const initialState = {
@@ -15,6 +18,7 @@ const initialState = {
   returnedNo: null,
   preFilter: null,
   showed: null,
+  owned: [],
 };
 
 export default function (state = initialState, action) {
@@ -65,6 +69,7 @@ export default function (state = initialState, action) {
         loaded: payload.single ? [payload.data] : payload.data,
         museumsNo: payload.museumsNo * 1,
         returnedNo: payload.count * 1,
+        owned: payload.single === "owner" ? payload.data : [],
       };
     case SETUP_LOADED:
       return {

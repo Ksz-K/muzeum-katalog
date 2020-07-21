@@ -8,6 +8,9 @@ import {
   FILTER_REDUX,
   FILTER_MONGO,
   SETUP_LOADED,
+  CREATE_MUSEUM,
+  UPDATE_MUSEUM,
+  DELETE_MUSEUM,
 } from "./types";
 
 //Make loading TRUE
@@ -49,9 +52,16 @@ export const setupLoaded = (loaded) => async (dispatch) => {
 //Load museum 2 show
 export const load2show = (query = "", single = false) => async (dispatch) => {
   dispatch(loadingTrue());
+
   try {
     let res = await axios.get(`/api/v1/museums/${query}`);
-    single ? (res.data.single = true) : (res.data.single = false);
+    if (single === true) {
+      res.data.single = true;
+    } else if (single === "owner") {
+      res.data.single = "owner";
+    } else {
+      res.data.single = false;
+    }
 
     dispatch({
       type: LOAD_2_SHOW,
@@ -113,6 +123,42 @@ export const filterMongo = ({ km, longitude, latitude, rating }) => async (
     dispatch({
       type: FILTER_MONGO,
       payload: res.data,
+    });
+  } catch (error) {
+    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
+    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+  }
+};
+
+//Create museum
+export const createMuseum = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: CREATE_MUSEUM,
+    });
+  } catch (error) {
+    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
+    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+  }
+};
+
+//Update museum
+export const updateMuseum = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: UPDATE_MUSEUM,
+    });
+  } catch (error) {
+    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
+    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+  }
+};
+
+//Delete museum
+export const deleteMuseum = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: DELETE_MUSEUM,
     });
   } catch (error) {
     dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
