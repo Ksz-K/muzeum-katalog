@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
 import { countMuseums } from "../../actions/museum";
 import { loadReviews } from "../../actions/loadReviews";
+import { load2show } from "../../actions/loadMuseums";
 
 const Navbar = ({
   history,
@@ -14,6 +15,7 @@ const Navbar = ({
   countMuseums,
   loadReviews,
   usersReviews,
+  load2show,
 }) => {
   const authLinks = (
     <ul className="navbar-nav ml-auto">
@@ -52,24 +54,17 @@ const Navbar = ({
           <i className="fas fa-user"></i> Konto
         </a>
         <div className="dropdown-menu">
-          <Link
-            className="dropdown-item"
-            to="/managemuseums"
-            style={{
-              display: user.role === "publisher" ? "auto" : "none",
-            }}
-          >
-            Twoje Muzeum
-          </Link>
-          <Link
-            className="dropdown-item"
-            to="/managereviews"
-            style={{
-              display: user.role === "user" ? "auto" : "none",
-            }}
-          >
-            Twoje Opinie
-          </Link>
+          {user.role === "publisher" ? (
+            <Link className="dropdown-item" to="/managemuseums">
+              Twoje Muzeum
+            </Link>
+          ) : usersReviews ? (
+            usersReviews && (
+              <Link className="dropdown-item" to="/managereviews">
+                Twoje Opinie
+              </Link>
+            )
+          ) : null}
           <Link className="dropdown-item" to="/manageaccount">
             Twoje Konto
           </Link>
@@ -87,7 +82,13 @@ const Navbar = ({
         </div>
       </li>
       <li className="nav-item">
-        <Link className="nav-link" to="/museums">
+        <Link
+          className="nav-link"
+          onClick={() => {
+            load2show();
+          }}
+          to="/museums"
+        >
           Nasze Muzea
         </Link>
       </li>
@@ -167,6 +168,7 @@ Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
   countMuseums: PropTypes.func.isRequired,
   loadReviews: PropTypes.func.isRequired,
+  load2show: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
@@ -174,6 +176,9 @@ const mapStateToProps = (state) => ({
   museum: state.museum,
   usersReviews: state.loadReviews.userTotalReviews,
 });
-export default connect(mapStateToProps, { logout, countMuseums, loadReviews })(
-  withRouter(Navbar)
-);
+export default connect(mapStateToProps, {
+  logout,
+  countMuseums,
+  loadReviews,
+  load2show,
+})(withRouter(Navbar));

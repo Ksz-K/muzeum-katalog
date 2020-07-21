@@ -23,9 +23,14 @@ const Museums = () => {
   useEffect(() => {
     if (fullList.length === 0) {
       dispatch(takeCities());
-      dispatch(load2show());
     }
   }, [fullList]);
+
+  useEffect(() => {
+    if (loadMuseums.museumsNo === null) {
+      dispatch(load2show());
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     place: "Zbieram dane...",
@@ -149,7 +154,9 @@ const Museums = () => {
   const [paginationLogic, setPaginationLogic] = useState({
     currentStart: 0,
   });
-  const pages = Array(Math.ceil(loadMuseums.returnedNo / 4)).fill(1);
+  const pages = loadMuseums.loading
+    ? "calculating"
+    : Array(Math.ceil(loadMuseums.returnedNo / 4)).fill(1);
 
   const { currentStart } = paginationLogic;
   const highlighted = {
@@ -157,239 +164,257 @@ const Museums = () => {
     borderBottom: "2px solid #00f",
   };
   return (
-    <section className="browse mb-5" style={{ marginTop: "10vh" }}>
-      <div className="container  ">
-        <div className="row">
-          {/* Sidebar   */}
-          <div className="col-md-4">
-            <div className="card card-body mb-4">
-              <h4 className="mb-3">Szukaj muzeum w okolicy...</h4>
-              <form onSubmit={(e) => onSubmit(e)}>
-                <div className="row">
-                  <div className="col-md-4">
-                    <div className="form-group">
+    <Fragment>
+      {loadMuseums.loading === true ? (
+        <Fragment>
+          <Spinner />
+        </Fragment>
+      ) : (
+        <Fragment>
+          <section className="browse mb-5" style={{ marginTop: "10vh" }}>
+            <div className="container  ">
+              <div className="row">
+                {/* Sidebar   */}
+                <div className="col-md-4">
+                  <div className="card card-body mb-4">
+                    <h4 className="mb-3">Szukaj muzeum w okolicy...</h4>
+                    <form onSubmit={(e) => onSubmit(e)}>
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="form-group">
+                            <input
+                              type="number"
+                              className="form-control"
+                              name="km"
+                              min="1"
+                              max="777"
+                              value={km}
+                              onChange={(e) => onChange(e)}
+                              placeholder="km"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="form-group">
+                            <Suggestion fullList={fullList} place={place} />
+                          </div>
+                        </div>
+                      </div>
                       <input
-                        type="number"
-                        className="form-control"
-                        name="km"
-                        min="1"
-                        max="777"
-                        value={km}
-                        onChange={(e) => onChange(e)}
-                        placeholder="km"
+                        type="submit"
+                        value="Wyszukaj muzeum"
+                        className="btn btn-primary btn-block"
                       />
-                    </div>
-                  </div>
-                  <div className="col-md-8">
-                    <div className="form-group">
-                      <Suggestion fullList={fullList} place={place} />
-                    </div>
-                  </div>
-                </div>
-                <input
-                  type="submit"
-                  value="Wyszukaj muzeum"
-                  className="btn btn-primary btn-block"
-                />
-              </form>
-              {!loadMuseums.returnedNo && (
-                <button
-                  type="button"
-                  className="btn btn-dark btn-block mt-2"
-                  onClick={() => {
-                    dispatch(load2show());
-                  }}
-                >
-                  Resetuj wyszukiwanie
-                </button>
-              )}
-            </div>
-            <div className="card card-body mb-4">
-              <h4 className="mb-3">Aktywny filtr wyszukiwania</h4>
-              <span className="badge badge-primary">
-                Miejscowość:{" "}
-                {citySelected !== null ? citySelected.name : geoLocation.city}
-              </span>
-              <span className="badge my-1  badge-secondary">
-                Obszar: {km || "niezdefiniowano"} {km && <span>km</span>}
-              </span>
-              <span className="badge my-1  badge-success">
-                Załadowono obiektów: {loadMuseums.museumsNo}
-              </span>
-              <span className="badge my-1  badge-danger">
-                Obiekty prezentowane: {loadMuseums.returnedNo}
-              </span>
-              <span className="badge my-1  badge-info">
-                Ocena: {rating || "niezdefiniowano"}{" "}
-              </span>
-
-              {1 && (
-                <button
-                  type="button"
-                  className="btn btn-dark btn-block mt-2"
-                  onClick={() => {
-                    dispatch(load2show());
-                  }}
-                >
-                  Resetuj wyszukiwanie
-                </button>
-              )}
-            </div>
-
-            <h4>Filtr</h4>
-            <form>
-              <div className="form-group">
-                <label style={rating ? { display: "none" } : {}}> Ocena</label>
-                <select
-                  className="custom-select mb-2"
-                  name="rating"
-                  value={rating}
-                  onChange={(e) => onChange(e)}
-                >
-                  <option value=""></option>
-                  <option value="9">9+</option>
-                  <option value="8">8+</option>
-                  <option value="7">7+</option>
-                  <option value="6">6+</option>
-                  <option value="5">5+</option>
-                  <option value="4">4+</option>
-                  <option value="3">3+</option>
-                  <option value="2">2+</option>
-                </select>
-              </div>
-              <input
-                type="submit"
-                value="Filtruj wyniki"
-                className="btn btn-primary btn-block"
-                onClick={(e) => {
-                  filterThem(e);
-                }}
-              />
-            </form>
-          </div>
-          {/* Main col   */}
-          <div className="col-md-8">
-            {/* Museums   */}
-
-            {loadMuseums.loading === true ? (
-              <Fragment>
-                <Spinner />
-              </Fragment>
-            ) : (
-              <Fragment>
-                {!loadMuseums.returnedNo && (
-                  <button
-                    type="button"
-                    className="btn btn-info btn-block mt-2"
-                    onClick={() => {
-                      dispatch(load2show());
-                    }}
-                  >
-                    System zwrócił zero wyników wyszukiwania
-                  </button>
-                )}
-                {loadMuseums.loaded.map((museum, index) => (
-                  <Museum
-                    key={museum._id}
-                    name={museum.name}
-                    address={museum.location.formattedAddress}
-                    description={museum.description}
-                    photo={museum.photo}
-                    www_url={museum.slug}
-                    museumID={museum._id}
-                    averageRating={museum.averageRating || "*"}
-                    paginationViewStatus={
-                      index < currentStart
-                        ? "d-none"
-                        : index < currentStart + 4
-                        ? ""
-                        : "d-none"
-                    }
-                  />
-                ))}
-              </Fragment>
-            )}
-
-            {/* Pagination   */}
-
-            {loadMuseums.returnedNo > 4 && (
-              <Fragment>
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination">
-                    {currentStart > 1 && (
-                      <li className="page-item">
-                        <a
-                          className="page-link"
-                          href="#!"
-                          onClick={() => {
-                            setPaginationLogic({
-                              ...paginationLogic,
-                              currentStart:
-                                currentStart - 4 < 0 ? 0 : currentStart - 4,
-                            });
-                          }}
-                        >
-                          Poprzednia
-                        </a>
-                      </li>
-                    )}
-
-                    {pages.map((page, index) => (
-                      <li
-                        className="page-item"
-                        key={index}
-                        id={index}
-                        style={
-                          Math.ceil((currentStart * 1) / 4) === index * 1
-                            ? highlighted
-                            : null
-                        }
+                    </form>
+                    {!loadMuseums.returnedNo && (
+                      <button
+                        type="button"
+                        className="btn btn-dark btn-block mt-2"
+                        onClick={() => {
+                          dispatch(load2show());
+                        }}
                       >
-                        <a
-                          className="page-link  "
-                          href="#!"
-                          onClick={() => {
-                            setPaginationLogic({
-                              ...paginationLogic,
-                              currentStart:
-                                index * 4 > loadMuseums.returnedNo - 4
-                                  ? loadMuseums.returnedNo - 4
-                                  : index * 4,
-                            });
-                          }}
-                        >
-                          {index + 1}
-                        </a>
-                      </li>
-                    ))}
-
-                    {currentStart < loadMuseums.returnedNo - 4 && (
-                      <li className="page-item">
-                        <a
-                          className="page-link"
-                          href="#!"
-                          onClick={() => {
-                            setPaginationLogic({
-                              ...paginationLogic,
-                              currentStart:
-                                currentStart + 4 > loadMuseums.returnedNo - 4
-                                  ? loadMuseums.returnedNo - 4
-                                  : currentStart + 4,
-                            });
-                          }}
-                        >
-                          Następna
-                        </a>
-                      </li>
+                        Resetuj wyszukiwanie
+                      </button>
                     )}
-                  </ul>
-                </nav>
-              </Fragment>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
+                  </div>
+                  <div className="card card-body mb-4">
+                    <h4 className="mb-3">Aktywny filtr wyszukiwania</h4>
+                    <span className="badge badge-primary">
+                      Miejscowość:{" "}
+                      {citySelected !== null
+                        ? citySelected.name
+                        : geoLocation.city}
+                    </span>
+                    <span className="badge my-1  badge-secondary">
+                      Obszar: {km || "niezdefiniowano"} {km && <span>km</span>}
+                    </span>
+                    <span className="badge my-1  badge-success">
+                      Załadowono obiektów: {loadMuseums.museumsNo}
+                    </span>
+                    <span className="badge my-1  badge-danger">
+                      Obiekty prezentowane: {loadMuseums.returnedNo}
+                    </span>
+                    <span className="badge my-1  badge-info">
+                      Ocena: {rating || "niezdefiniowano"}{" "}
+                    </span>
+
+                    {1 && (
+                      <button
+                        type="button"
+                        className="btn btn-dark btn-block mt-2"
+                        onClick={() => {
+                          dispatch(load2show());
+                        }}
+                      >
+                        Resetuj wyszukiwanie
+                      </button>
+                    )}
+                  </div>
+
+                  <h4>Filtr</h4>
+                  <form>
+                    <div className="form-group">
+                      <label style={rating ? { display: "none" } : {}}>
+                        {" "}
+                        Ocena
+                      </label>
+                      <select
+                        className="custom-select mb-2"
+                        name="rating"
+                        value={rating}
+                        onChange={(e) => onChange(e)}
+                      >
+                        <option value=""></option>
+                        <option value="9">9+</option>
+                        <option value="8">8+</option>
+                        <option value="7">7+</option>
+                        <option value="6">6+</option>
+                        <option value="5">5+</option>
+                        <option value="4">4+</option>
+                        <option value="3">3+</option>
+                        <option value="2">2+</option>
+                      </select>
+                    </div>
+                    <input
+                      type="submit"
+                      value="Filtruj wyniki"
+                      className="btn btn-primary btn-block"
+                      onClick={(e) => {
+                        filterThem(e);
+                      }}
+                    />
+                  </form>
+                </div>
+                {/* Main col   */}
+                <div className="col-md-8">
+                  {/* Museums   */}
+
+                  {loadMuseums.loading === true ? (
+                    <Fragment>
+                      <Spinner />
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      {!loadMuseums.returnedNo && (
+                        <button
+                          type="button"
+                          className="btn btn-info btn-block mt-2"
+                          onClick={() => {
+                            dispatch(load2show());
+                          }}
+                        >
+                          System zwrócił zero wyników wyszukiwania
+                        </button>
+                      )}
+                      {loadMuseums.loaded.map((museum, index) => (
+                        <Museum
+                          key={museum._id}
+                          name={museum.name}
+                          address={museum.location.formattedAddress}
+                          description={museum.description}
+                          photo={museum.photo}
+                          www_url={museum.slug}
+                          museumID={museum._id}
+                          averageRating={museum.averageRating || "*"}
+                          paginationViewStatus={
+                            index < currentStart
+                              ? "d-none"
+                              : index < currentStart + 4
+                              ? ""
+                              : "d-none"
+                          }
+                        />
+                      ))}
+                    </Fragment>
+                  )}
+
+                  {/* Pagination   */}
+
+                  {loadMuseums.returnedNo > 4 && (
+                    <Fragment>
+                      <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                          {currentStart > 1 && (
+                            <li className="page-item">
+                              <a
+                                className="page-link"
+                                href="#!"
+                                onClick={() => {
+                                  setPaginationLogic({
+                                    ...paginationLogic,
+                                    currentStart:
+                                      currentStart - 4 < 0
+                                        ? 0
+                                        : currentStart - 4,
+                                  });
+                                }}
+                              >
+                                Poprzednia
+                              </a>
+                            </li>
+                          )}
+
+                          {pages.map((page, index) => (
+                            <li
+                              className="page-item"
+                              key={index}
+                              id={index}
+                              style={
+                                Math.ceil((currentStart * 1) / 4) === index * 1
+                                  ? highlighted
+                                  : null
+                              }
+                            >
+                              <a
+                                className="page-link  "
+                                href="#!"
+                                onClick={() => {
+                                  setPaginationLogic({
+                                    ...paginationLogic,
+                                    currentStart:
+                                      index * 4 > loadMuseums.returnedNo - 4
+                                        ? loadMuseums.returnedNo - 4
+                                        : index * 4,
+                                  });
+                                }}
+                              >
+                                {index + 1}
+                              </a>
+                            </li>
+                          ))}
+
+                          {currentStart < loadMuseums.returnedNo - 4 && (
+                            <li className="page-item">
+                              <a
+                                className="page-link"
+                                href="#!"
+                                onClick={() => {
+                                  setPaginationLogic({
+                                    ...paginationLogic,
+                                    currentStart:
+                                      currentStart + 4 >
+                                      loadMuseums.returnedNo - 4
+                                        ? loadMuseums.returnedNo - 4
+                                        : currentStart + 4,
+                                  });
+                                }}
+                              >
+                                Następna
+                              </a>
+                            </li>
+                          )}
+                        </ul>
+                      </nav>
+                    </Fragment>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        </Fragment>
+      )}
+    </Fragment>
   );
 };
 

@@ -9,6 +9,9 @@ import {
   load2show,
   setupLoaded,
 } from "../../actions/loadMuseums";
+
+import { cleanReviews, loadReviews } from "../../actions/loadReviews";
+
 import { setAlert } from "../../actions/alert";
 
 import Spinner from "./Spinner";
@@ -33,6 +36,9 @@ const MuseumProfile = ({ match, history }) => {
     ifError: 0,
   });
 
+  useEffect(() => {
+    dispatch(cleanReviews());
+  });
   useEffect(() => {
     dispatch(loadingTrue());
     if (
@@ -120,6 +126,11 @@ const MuseumProfile = ({ match, history }) => {
                   <i className="fas fa-comments"></i> Opinie o muzeum
                 </Link>
                 <Link
+                  onClick={() => {
+                    dispatch(
+                      loadReviews(loadMuseums.showed._id, 0, auth.user._id)
+                    );
+                  }}
                   to="/addreview"
                   className="btn btn-light btn-block my-3"
                   style={{

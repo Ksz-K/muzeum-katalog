@@ -89,6 +89,16 @@ const Reviews = ({ history }) => {
               </span>
               Średnia ocen
             </h1>
+            <Link
+              className="nav-link"
+              to="/login"
+              style={{
+                display: auth.user === "none" ? "auto" : "none",
+              }}
+            >
+              <i className="fas fa-sign-in-alt"></i> Aby dodać opinie zaloguj
+              się
+            </Link>
             {reviews.isReviewer.length > 0 ? (
               <Fragment>
                 <Link
@@ -109,7 +119,13 @@ const Reviews = ({ history }) => {
                   }}
                 >
                   <i className="fas fa-pencil-alt"></i>
-                  &nbsp;Napisz opinię
+                  {auth.user === "none" ? (
+                    <Fragment>
+                      <span>Aby dodać opinie zaloguj się</span>
+                    </Fragment>
+                  ) : (
+                    <Fragment>&nbsp;Napisz opinię</Fragment>
+                  )}
                 </Link>
               </Fragment>
             )}

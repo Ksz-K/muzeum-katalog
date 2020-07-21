@@ -61,8 +61,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        showed: null,
-        loaded: payload.data,
+        showed: payload.single ? payload.data : null,
+        loaded: payload.single ? [payload.data] : payload.data,
         museumsNo: payload.museumsNo * 1,
         returnedNo: payload.count * 1,
       };

@@ -1,4 +1,11 @@
-import { LOAD_REVIEWS, CLEAN_REVIEWS, CREATE_REVIEW } from "../actions/types";
+import {
+  LOAD_REVIEWS,
+  SELECT_REVIEW_4_EDIT,
+  CLEAN_REVIEWS,
+  CREATE_REVIEW,
+  UPDATE_REVIEW,
+  DELETE_REVIEW,
+} from "../actions/types";
 
 const initialState = {
   loading: true,
@@ -18,7 +25,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        showed: null,
         loaded: [...state.loaded, ...payload.data],
         reviewsNo: payload.total * 1,
         returnedNo: payload.count * 1,
@@ -30,12 +36,29 @@ export default function (state = initialState, action) {
 
     case CLEAN_REVIEWS:
       return {
-        ...state,
+        userTotalReviews: state.userTotalReviews,
+        loading: true,
         loaded: [],
+        reviewsNo: null,
+        returnedNo: null,
+        preFilter: null,
+        isReviewer: [],
       };
     case CREATE_REVIEW:
+    case UPDATE_REVIEW:
       return {
         ...state,
+      };
+    case DELETE_REVIEW:
+      return {
+        ...state,
+        loaded: state.loaded.filter((review) => review._id !== payload),
+      };
+    case SELECT_REVIEW_4_EDIT:
+      return {
+        ...state,
+        loaded: state.loaded.filter((review) => review._id === payload),
+        isReviewer: state.loaded.filter((review) => review._id === payload),
       };
 
     default:

@@ -15,6 +15,7 @@ import Museums from "./components/layout/Museums";
 import MuseumProfile from "./components/layout/MuseumProfile";
 import Reviews from "./components/layout/Reviews";
 import AddReview from "./components/layout/AddReview";
+import ManageReviews from "./components/layout/ManageReviews";
 import Alert from "./components/layout/Alert";
 import { loadUser } from "./actions/auth";
 import { whereVisitorIs } from "./actions/museum";
@@ -60,6 +61,11 @@ const App = () => {
               exact
               path="/manageaccount"
               component={ManageAccount}
+            />
+            <PrivateRoute
+              exact
+              path="/managereviews"
+              component={ManageReviews}
             />
             <PrivateRoute exact path="/addreview" component={AddReview} />
           </Switch>

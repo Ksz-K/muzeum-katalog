@@ -47,10 +47,12 @@ export const setupLoaded = (loaded) => async (dispatch) => {
   }
 };
 //Load museum 2 show
-export const load2show = (query = "") => async (dispatch) => {
+export const load2show = (query = "", single = false) => async (dispatch) => {
   dispatch(loadingTrue());
   try {
-    const res = await axios.get(`/api/v1/museums/${query}`);
+    let res = await axios.get(`/api/v1/museums/${query}`);
+    single ? (res.data.single = true) : (res.data.single = false);
+
     dispatch({
       type: LOAD_2_SHOW,
       payload: res.data,
