@@ -11,6 +11,7 @@ import {
   CREATE_MUSEUM,
   UPDATE_MUSEUM,
   DELETE_MUSEUM,
+  LOAD_OWNED,
 } from "./types";
 
 //Make loading TRUE
@@ -65,6 +66,26 @@ export const load2show = (query = "", single = false) => async (dispatch) => {
 
     dispatch({
       type: LOAD_2_SHOW,
+      payload: res.data,
+    });
+  } catch (error) {
+    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
+    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+  }
+};
+
+//Load museum owned by Muzealnik
+export const loadOwned = (query) => async (dispatch) => {
+  dispatch(loadingTrue());
+  if (query.split("=")[1].trim() === "undefined") {
+    return dispatch(setAlert("Chwilowy problem z serwerem", "danger"));
+  }
+
+  try {
+    const res = await axios.get(`/api/v1/museums/${query}`);
+
+    dispatch({
+      type: LOAD_OWNED,
       payload: res.data,
     });
   } catch (error) {
@@ -131,14 +152,45 @@ export const filterMongo = ({ km, longitude, latitude, rating }) => async (
 };
 
 //Create museum
-export const createMuseum = () => async (dispatch) => {
+export const createMuseum = (
+  name,
+  description,
+  website,
+  phone,
+  email,
+  comboAddress
+) => async (dispatch) => {
+  dispatch(loadingTrue());
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({
+    name,
+    description,
+    website,
+    phone,
+    email,
+    address: comboAddress,
+  });
+
   try {
+    const res = await axios.post(`/api/v1/museums/`, body, config);
+
     dispatch({
       type: CREATE_MUSEUM,
+      payload: res.data,
     });
+    dispatch(
+      setAlert("Muzeum zostało pomyślnie zapisane w katalogu", "success")
+    );
   } catch (error) {
-    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
-    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
   }
 };
 
@@ -155,13 +207,21 @@ export const updateMuseum = () => async (dispatch) => {
 };
 
 //Delete museum
-export const deleteMuseum = () => async (dispatch) => {
+export const deleteMuseum = (id) => async (dispatch) => {
+  dispatch(loadingTrue());
   try {
+    await axios.delete(`/api/v1/museums/${id}`);
+
     dispatch({
       type: DELETE_MUSEUM,
     });
+
+    dispatch(setAlert("Muzeum zostało usunięte", "primary"));
   } catch (error) {
-    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
-    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+    console.log(error);
   }
 };

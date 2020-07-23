@@ -8,6 +8,8 @@ import {
 } from "../../actions/loadMuseums";
 import Spinner from "./Spinner";
 import ConfirmModal from "./ConfirmModal";
+import SearchAddress from "./SearchAddress";
+import { setAlert } from "../../actions/alert";
 
 const AddMuseum = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,8 +31,20 @@ const AddMuseum = ({ history }) => {
   });
 
   const [modalSeen, setModalSeen] = useState(false);
+  const [geoCoords, setGeocoords] = useState({
+    lat: 52,
+    lng: 21,
+  });
   const toggleModal = () => {
     setModalSeen(!modalSeen);
+  };
+
+  const takeData = (lat, lng, address) => {
+    setGeocoords({
+      lat,
+      lng,
+    });
+    setFormData({ ...formData, address: address });
   };
   // useEffect(() => {
   //   if (4> 8) {
@@ -53,14 +67,11 @@ const AddMuseum = ({ history }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    toggleModal();
-    if (7 > 6) {
-      console.log(formData);
-      // dispatch(updateReview(title, text, rating, reviews.isReviewer[0]._id));
-    } else {
-      // dispatch(createReview(title, text, rating, showed._id));
+
+    if (address.split(",").pop().trim() !== "Polska") {
+      return dispatch(setAlert("Adres musi znajdować się w Polsce", "info"));
     }
-    // history.push("/reviews");
+    toggleModal();
   };
 
   return (
@@ -80,6 +91,8 @@ const AddMuseum = ({ history }) => {
                 email={email}
                 website={website}
                 description={description}
+                lat={geoCoords.lat}
+                lng={geoCoords.lng}
                 toggleModal={() => {
                   toggleModal();
                 }}
@@ -108,6 +121,9 @@ const AddMuseum = ({ history }) => {
                             </label>
                           </div>
                           <div className="form-group">
+                            <SearchAddress takeData={takeData} />
+                          </div>
+                          {/* <div className="form-group">
                             <input
                               type="text"
                               name="address"
@@ -122,7 +138,7 @@ const AddMuseum = ({ history }) => {
                             <small className="form-text text-muted">
                               Prosimy podać wraz z numerem ulicy
                             </small>
-                          </div>
+                          </div> */}
                           <div className="form-group">
                             <input
                               type="number"

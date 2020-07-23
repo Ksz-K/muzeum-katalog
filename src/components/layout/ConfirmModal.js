@@ -1,4 +1,7 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { createMuseum } from "../../actions/loadMuseums";
 import MapBox from "./MapBox";
 
 const ConfirmModal = ({
@@ -9,15 +12,16 @@ const ConfirmModal = ({
   website,
   description,
   toggleModal,
+  lat,
+  lng,
 }) => {
-  const onSubmit = async (e) => {
-    e.preventDefault();
-  };
+  const dispatch = useDispatch();
+  const comboAddress = `${address}--${lat}--${lng}`;
 
   return (
     <div className="confirm-modal">
       <h1 className="mb-2">Potwierdź dane Muzeum</h1>
-      <form onSubmit={(e) => onSubmit(e)}>
+      <form>
         <div className="row">
           <div className="col-md-6">
             <div className="card bg-white py-2 px-4">
@@ -102,15 +106,24 @@ const ConfirmModal = ({
           </div>
         </div>
         <div className="form-group">
-          <button
+          <Link
+            to="/managemuseums"
             className="btn btn-success btn-block my-4"
             onClick={() => {
-              console.log("click");
-              toggleModal();
+              dispatch(
+                createMuseum(
+                  name,
+                  description,
+                  website,
+                  phone,
+                  email,
+                  comboAddress
+                )
+              );
             }}
           >
-            Wprowadź muzeum do katalogu
-          </button>
+            Kliknij aby Wprowadzić muzeum do katalogu
+          </Link>
           <button
             className="btn btn-primary btn-block"
             onClick={() => {
@@ -118,9 +131,9 @@ const ConfirmModal = ({
               toggleModal();
             }}
           >
-            Dane wymagają korekty...
+            Kliknij tu jeżeli dane wymagają korekty...
           </button>
-          <MapBox lng={21} lat={51} title={name} />
+          <MapBox lng={lng} lat={lat} title={name} zoom={16} />
         </div>
       </form>
     </div>

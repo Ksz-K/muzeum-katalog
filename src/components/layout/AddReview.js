@@ -16,7 +16,6 @@ const AddReview = ({ history }) => {
   const reviews = useSelector((state) => state.loadReviews);
 
   if (!showed && !loadMuseumStatus) {
-    console.log(showed);
     history.push("/museums");
   }
   const [formData, setFormData] = useState({

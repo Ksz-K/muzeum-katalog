@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
 import { countMuseums } from "../../actions/museum";
 import { loadReviews } from "../../actions/loadReviews";
-import { load2show } from "../../actions/loadMuseums";
+import { load2show, loadOwned } from "../../actions/loadMuseums";
 
 const Navbar = ({
   history,
@@ -16,6 +16,7 @@ const Navbar = ({
   loadReviews,
   usersReviews,
   load2show,
+  loadOwned,
 }) => {
   const authLinks = (
     <ul className="navbar-nav ml-auto">
@@ -62,7 +63,7 @@ const Navbar = ({
               className="dropdown-item"
               to="/managemuseums"
               onClick={() => {
-                load2show(`?user=${user._id}`, "owner");
+                loadOwned(`?user=${user._id}`);
               }}
             >
               Twoje Muzeum
@@ -190,4 +191,5 @@ export default connect(mapStateToProps, {
   countMuseums,
   loadReviews,
   load2show,
+  loadOwned,
 })(withRouter(Navbar));

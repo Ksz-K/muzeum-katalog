@@ -112,7 +112,7 @@ export const deleteReview = (id) => async (dispatch) => {
       type: DELETE_REVIEW,
       payload: id,
     });
-    console.log("jestem");
+
     dispatch(setAlert("Opinia została usunięta", "primary"));
   } catch (error) {
     const errors = error.response.data.error;

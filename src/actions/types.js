@@ -21,6 +21,7 @@ export const UPDATE_SELECTED = "UPDATE_SELECTED";
 
 export const LOAD_2_SHOW = "LOAD_2_SHOW";
 export const LOAD_NEAR_2_SHOW = "LOAD_NEAR_2_SHOW";
+export const LOAD_OWNED = "LOAD_OWNED";
 export const SETUP_LOADED = "SETUP_LOADED";
 export const CREATE_MUSEUM = "CREATE_MUSEUM";
 export const UPDATE_MUSEUM = "UPDATE_MUSEUM";

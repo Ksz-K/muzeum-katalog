@@ -1,6 +1,7 @@
 import {
   LOAD_2_SHOW,
   LOAD_NEAR_2_SHOW,
+  LOAD_OWNED,
   LOADING_TRUE,
   LOADING_FALSE,
   FILTER_REDUX,
@@ -69,12 +70,31 @@ export default function (state = initialState, action) {
         loaded: payload.single ? [payload.data] : payload.data,
         museumsNo: payload.museumsNo * 1,
         returnedNo: payload.count * 1,
-        owned: payload.single === "owner" ? payload.data : [],
       };
     case SETUP_LOADED:
       return {
         ...state,
         showed: payload,
+      };
+    case LOAD_OWNED:
+      return {
+        ...state,
+        showed: payload.data,
+        owned: payload.data,
+        loading: false,
+      };
+    case CREATE_MUSEUM:
+      return {
+        ...state,
+
+        owned: [payload.data],
+        loading: false,
+      };
+    case DELETE_MUSEUM:
+      return {
+        ...state,
+        loading: false,
+        owned: [],
       };
 
     default:

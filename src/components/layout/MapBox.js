@@ -7,7 +7,7 @@ const styles = {
   position: "absolute",
 };
 
-const MapBox = ({ lng, lat, title }) => {
+const MapBox = ({ lng, lat, title, zoom = 12 }) => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
 
@@ -19,7 +19,7 @@ const MapBox = ({ lng, lat, title }) => {
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/streets-v11",
         center: [lng, lat],
-        zoom: 12,
+        zoom,
       });
 
       map.on("load", () => {
