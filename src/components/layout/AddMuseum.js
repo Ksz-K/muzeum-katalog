@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {
   createMuseum,
   updateMuseum,
@@ -11,16 +11,10 @@ import ConfirmModal from "./ConfirmModal";
 import SearchAddress from "./SearchAddress";
 import { setAlert } from "../../actions/alert";
 
-const AddMuseum = ({ history }) => {
+const AddMuseum = () => {
   const dispatch = useDispatch();
 
-  // const showed = useSelector((state) => state.loadMuseums.showed);
-  // const loadMuseumStatus = useSelector((state) => state.loadMuseums.loading);
-  // const reviews = useSelector((state) => state.loadReviews);
-
-  if (1 > 2) {
-    history.push("/museums");
-  }
+  const museumsLoaded = useSelector((state) => state.loadMuseums);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -29,6 +23,19 @@ const AddMuseum = ({ history }) => {
     email: "",
     address: "",
   });
+
+  useEffect(() => {
+    if (museumsLoaded.owned.length > 0) {
+      setFormData({
+        name: museumsLoaded.owned[0].name,
+        description: museumsLoaded.owned[0].description,
+        website: museumsLoaded.owned[0].website,
+        phone: museumsLoaded.owned[0].phone,
+        email: museumsLoaded.owned[0].email,
+        address: museumsLoaded.owned[0].location.formattedAddress,
+      });
+    }
+  }, []);
 
   const [modalSeen, setModalSeen] = useState(false);
   const [geoCoords, setGeocoords] = useState({
@@ -46,18 +53,6 @@ const AddMuseum = ({ history }) => {
     });
     setFormData({ ...formData, address: address });
   };
-  // useEffect(() => {
-  //   if (4> 8) {
-  //     setFormData({
-  //       name: "",
-  //       description: "",
-  //       website: "",
-  //       phone: "",
-  //       email: "",
-  //       address: "",
-  //     });
-  //   }
-  // }, [reviews]);
 
   const { name, description, website, phone, email, address } = formData;
 
@@ -73,6 +68,11 @@ const AddMuseum = ({ history }) => {
     }
     toggleModal();
   };
+
+  //Redirect if page reloaded
+  if (museumsLoaded.museumsNo === null) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <Fragment>
@@ -100,7 +100,12 @@ const AddMuseum = ({ history }) => {
             )}
             {!modalSeen && (
               <Fragment>
-                <h1 className="mb-2">Dodaj Muzeum</h1>
+                <h1 className="mb-2">
+                  {" "}
+                  {museumsLoaded.owned.length
+                    ? "Edytuj dane Muzum"
+                    : "Dodaj Muzeum"}
+                </h1>
                 <form onSubmit={(e) => onSubmit(e)}>
                   <div className="row">
                     <div className="col-md-6">
@@ -121,7 +126,10 @@ const AddMuseum = ({ history }) => {
                             </label>
                           </div>
                           <div className="form-group">
-                            <SearchAddress takeData={takeData} />
+                            <SearchAddress
+                              takeData={takeData}
+                              editedAddress={formData.address}
+                            />
                           </div>
                           {/* <div className="form-group">
                             <input

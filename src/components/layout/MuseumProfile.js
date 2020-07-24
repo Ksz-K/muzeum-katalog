@@ -54,8 +54,8 @@ const MuseumProfile = ({ match, history }) => {
         photo: museumLoaded.photo,
         name: museumLoaded.name,
         description: museumLoaded.description,
-        expositions: museumLoaded.expositions,
-        averageRating: museumLoaded.averageRating,
+        expositions: museumLoaded.expositions || [],
+        averageRating: museumLoaded.averageRating || "*",
         website: museumLoaded.website,
         lng: museumLoaded.location.coordinates[0],
         lat: museumLoaded.location.coordinates[1],
@@ -71,7 +71,6 @@ const MuseumProfile = ({ match, history }) => {
   const loadBySlug = async () => {
     setProfileData({ ...profileData, ifError: profileData.ifError + 1 });
     if (profileData.ifError > 7) {
-      console.log(profileData.ifError);
       history.push("/pageNotFound");
     }
     dispatch(load2show(`?slug=${match.params.name}`));

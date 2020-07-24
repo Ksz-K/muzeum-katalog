@@ -7,12 +7,12 @@ import {
   deleteMuseum,
   loadOwned,
 } from "../../actions/loadMuseums";
+import { countMuseums } from "../../actions/museum";
 import Spinner from "./Spinner";
 
 const ManageMuseums = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {});
   const museumsLoaded = useSelector((state) => state.loadMuseums);
 
   const [isOwner, setIsOwner] = useState(false);
@@ -137,7 +137,7 @@ const ManageMuseums = () => {
                         />
                       </form>
                       <Link
-                        to="/addbootcamp"
+                        to="/addmuseum"
                         className="btn btn-primary btn-block"
                       >
                         Edytuj dane Muzeum{" "}
@@ -154,6 +154,7 @@ const ManageMuseums = () => {
                         onClick={() => {
                           if (window.confirm("Usunąć trwale Muzeum?")) {
                             dispatch(deleteMuseum(pageContent.id));
+                            dispatch(countMuseums());
                           }
                         }}
                         to="/managemuseums"

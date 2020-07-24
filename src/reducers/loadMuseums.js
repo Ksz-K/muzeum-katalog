@@ -84,9 +84,10 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case CREATE_MUSEUM:
+    case UPDATE_MUSEUM:
       return {
         ...state,
-
+        loaded: [...state.loaded, payload.data],
         owned: [payload.data],
         loading: false,
       };

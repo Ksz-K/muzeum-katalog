@@ -17,7 +17,7 @@ import "@reach/combobox/styles.css";
 
 const libraries = ["places"];
 
-function SearchAddress({ takeData }) {
+function SearchAddress({ takeData, editedAddress }) {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyD4TkS2QxokFJN5XvWXg9LcpB8_HV5RH4U",
     libraries,
@@ -28,12 +28,12 @@ function SearchAddress({ takeData }) {
 
   return (
     <div>
-      <Search takeData={takeData} />
+      <Search takeData={takeData} editedAddress={editedAddress} />
     </div>
   );
 }
 
-function Search({ takeData }) {
+function Search({ takeData, editedAddress }) {
   const {
     ready,
     value,
@@ -64,7 +64,7 @@ function Search({ takeData }) {
       >
         <ComboboxInput
           className="form-control"
-          value={value}
+          value={value || editedAddress}
           onChange={(e) => {
             setValue(e.target.value);
           }}

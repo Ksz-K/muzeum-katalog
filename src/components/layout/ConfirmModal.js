@@ -1,8 +1,9 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { createMuseum } from "../../actions/loadMuseums";
+import { createMuseum, updateMuseum } from "../../actions/loadMuseums";
 import MapBox from "./MapBox";
+import { countMuseums } from "../../actions/museum";
 
 const ConfirmModal = ({
   name,
@@ -17,6 +18,22 @@ const ConfirmModal = ({
 }) => {
   const dispatch = useDispatch();
   const comboAddress = `${address}--${lat}--${lng}`;
+  const isEdited = useSelector((state) => state.loadMuseums.owned.length);
+  const loadedMuseum = useSelector((state) => state.loadMuseums.owned);
+  let id = isEdited ? loadedMuseum[0]._id : null;
+
+  const handleClick = () => {
+    if (isEdited) {
+      dispatch(
+        updateMuseum(name, description, website, phone, email, comboAddress, id)
+      );
+    } else {
+      dispatch(
+        createMuseum(name, description, website, phone, email, comboAddress, id)
+      );
+      dispatch(countMuseums());
+    }
+  };
 
   return (
     <div className="confirm-modal">
@@ -109,25 +126,15 @@ const ConfirmModal = ({
           <Link
             to="/managemuseums"
             className="btn btn-success btn-block my-4"
-            onClick={() => {
-              dispatch(
-                createMuseum(
-                  name,
-                  description,
-                  website,
-                  phone,
-                  email,
-                  comboAddress
-                )
-              );
-            }}
+            onClick={handleClick}
           >
-            Kliknij aby Wprowadzić muzeum do katalogu
+            {isEdited
+              ? "Kliknij aby poprawić dane muzeum w katalogu"
+              : "Kliknij aby wprowadzić muzeum do katalogu"}
           </Link>
           <button
             className="btn btn-primary btn-block"
             onClick={() => {
-              console.log("click");
               toggleModal();
             }}
           >

@@ -195,14 +195,46 @@ export const createMuseum = (
 };
 
 //Update museum
-export const updateMuseum = () => async (dispatch) => {
+export const updateMuseum = (
+  name,
+  description,
+  website,
+  phone,
+  email,
+  comboAddress,
+  id
+) => async (dispatch) => {
+  dispatch(loadingTrue());
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({
+    name,
+    description,
+    website,
+    phone,
+    email,
+    address: comboAddress,
+  });
+
   try {
+    const res = await axios.put(`/api/v1/museums/${id}`, body, config);
+
     dispatch({
       type: UPDATE_MUSEUM,
+      payload: res.data,
     });
+    dispatch(
+      setAlert("Muzeum zostało pomyślnie zaktualizowane w katalogu", "success")
+    );
   } catch (error) {
-    dispatch(setAlert("System nie uzyskał dostępu do Bazy Danych", "danger"));
-    dispatch(setAlert("Prosimy spróbować jeszcze raz za chwilkę", "primary"));
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
   }
 };
 
