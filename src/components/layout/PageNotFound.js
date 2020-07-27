@@ -20,16 +20,12 @@ class PageNotFound extends Component {
 
   render() {
     return (
-      <div className="PageNotFound">
+      <div className="PageNotFound" style={{ marginTop: "10vh" }}>
         <h1>
-          There is no page on this path{" "}
+          Takiej ścieżki w tym serwisie nie ma...{" "}
           <code style={{ color: "#cba" }}>{this.props.location.pathname}</code>{" "}
         </h1>
-        <p>
-          {" "}
-          You'll be redirected to HomePage in a few sconds -{" "}
-          {this.state.counter}{" "}
-        </p>
+        <p> Powrót do Strony Głównej za - {this.state.counter} - sek.</p>
         {!this.state.counter && <Redirect to="/" />}
         <img src="https://kszk.vot.pl/deadend.jpg" alt="Dead end" />
       </div>
