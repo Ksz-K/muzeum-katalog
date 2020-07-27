@@ -314,11 +314,7 @@ export const createExposition = (title, description, museumId, owner) => async (
   });
 
   try {
-    const res = await axios.post(
-      `/api/v1/museums/${museumId}/expositions`,
-      body,
-      config
-    );
+    await axios.post(`/api/v1/museums/${museumId}/expositions`, body, config);
 
     dispatch({
       type: CREATE_EXPOSITION,
@@ -364,11 +360,7 @@ export const updateExposition = (
   });
 
   try {
-    const res = await axios.post(
-      `/api/v1/expositions/${expositionId}`,
-      body,
-      config
-    );
+    await axios.post(`/api/v1/expositions/${expositionId}`, body, config);
 
     dispatch({
       type: UPDATE_EXPOSITION,

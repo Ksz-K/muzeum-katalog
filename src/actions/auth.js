@@ -9,7 +9,6 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   UPDATE_PASSWORD,
-  REQUEST_RESTORE,
   RESTORE_PASSWORD,
   ACTION_PENDING,
   MANAGE_ACCOUNT,
@@ -195,7 +194,7 @@ export const manageAccount = ({ name, email }) => async (dispatch) => {
   const body = JSON.stringify({ name, email });
 
   try {
-    const res = await axios.put("/api/v1/auth/updatedetails", body, config);
+    await axios.put("/api/v1/auth/updatedetails", body, config);
 
     dispatch({
       type: MANAGE_ACCOUNT,

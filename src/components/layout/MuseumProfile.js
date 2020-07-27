@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment, useRef } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Exposition from "./Exposition";
@@ -12,14 +12,11 @@ import {
 
 import { cleanReviews, loadReviews } from "../../actions/loadReviews";
 
-import { setAlert } from "../../actions/alert";
-
 import Spinner from "./Spinner";
 
 const MuseumProfile = ({ match, history }) => {
   const dispatch = useDispatch();
 
-  const fullList = useSelector((state) => state.museum.cities);
   const loadMuseums = useSelector((state) => state.loadMuseums);
   const auth = useSelector((state) => state.auth);
 

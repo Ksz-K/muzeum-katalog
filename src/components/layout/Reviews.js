@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Review from "./Review";
 import Spinner from "./Spinner";
 import { loadReviews } from "../../actions/loadReviews";
@@ -11,6 +11,7 @@ const Reviews = ({ history }) => {
   const showed = useSelector((state) => state.loadMuseums.showed);
   const reviews = useSelector((state) => state.loadReviews);
   const auth = useSelector((state) => state.auth);
+  const museumsNo = useSelector((state) => state.loadMuseums.museumsNo);
 
   if (!showed) {
     history.push("/museums");
@@ -24,6 +25,11 @@ const Reviews = ({ history }) => {
     const skip = (reviews.loaded.length / 2) * 1;
     dispatch(loadReviews(showed._id, skip));
   };
+
+  //Redirect if page reloaded
+  if (museumsNo === null) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <section className="bootcamp" style={{ marginTop: "10vh" }}>

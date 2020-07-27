@@ -1,10 +1,16 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
 
 const Review = ({ title, text, rating, when, userName, userID }) => {
   const auth = useSelector((state) => state.auth);
+  const museumsNo = useSelector((state) => state.loadMuseums.museumsNo);
+
+  //Redirect if page reloaded
+  if (museumsNo === null) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className="card mb-3">

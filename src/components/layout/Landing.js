@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { takeCities } from "../../actions/museum";
 import { loadNear2show, load2show } from "../../actions/loadMuseums";
@@ -11,6 +11,7 @@ const Landing = ({ history }) => {
   const geoLocation = useSelector((state) => state.museum.visitorLocation);
   const fullList = useSelector((state) => state.museum.cities);
   const citySelected = useSelector((state) => state.museum.citySelected);
+  const museumsNo = useSelector((state) => state.loadMuseums.museumsNo);
 
   const [formData, setFormData] = useState({
     place: "Zbieram dane...",
@@ -86,6 +87,11 @@ const Landing = ({ history }) => {
 
     history.push("/museums");
   };
+
+  //Redirect if page reloaded
+  if (museumsNo === null) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <section className="showcase">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { takeCities } from "../../actions/museum";
 import {
   load2show,
@@ -19,6 +20,7 @@ const Museums = () => {
   const geoLocation = useSelector((state) => state.museum.visitorLocation);
   const citySelected = useSelector((state) => state.museum.citySelected);
   const loadMuseums = useSelector((state) => state.loadMuseums);
+  const museumsNo = useSelector((state) => state.loadMuseums.museumsNo);
 
   useEffect(() => {
     if (fullList.length === 0) {
@@ -163,6 +165,12 @@ const Museums = () => {
     borderTop: "2px solid #00f",
     borderBottom: "2px solid #00f",
   };
+
+  //Redirect if page reloaded
+  if (museumsNo === null) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Fragment>
       {loadMuseums.loading === true ? (

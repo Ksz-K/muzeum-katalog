@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {
   createReview,
   updateReview,
@@ -14,6 +14,7 @@ const AddReview = ({ history }) => {
   const showed = useSelector((state) => state.loadMuseums.showed);
   const loadMuseumStatus = useSelector((state) => state.loadMuseums.loading);
   const reviews = useSelector((state) => state.loadReviews);
+  const museumsNo = useSelector((state) => state.loadMuseums.museumsNo);
 
   if (!showed && !loadMuseumStatus) {
     history.push("/museums");
@@ -55,6 +56,11 @@ const AddReview = ({ history }) => {
     }
     history.push("/reviews");
   };
+
+  //Redirect if page reloaded
+  if (museumsNo === null) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <Fragment>
@@ -112,7 +118,7 @@ const AddReview = ({ history }) => {
                           name="text"
                           rows="10"
                           className="form-control"
-                          placeholder="Your review"
+                          placeholder="Twoja opinia..."
                           value={text}
                           onChange={(e) => onChange(e)}
                         ></textarea>

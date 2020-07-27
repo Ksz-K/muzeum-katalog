@@ -5,10 +5,14 @@ import { connect } from "react-redux";
 const Alert = ({ alerts }) =>
   alert !== null &&
   alerts.length > 0 &&
-  alerts.map((alert) => (
+  alerts.map((alert, index) => (
     <div
       key={alert.id}
-      style={{ marginTop: "9vh", zIndex: "100" }}
+      style={{
+        position: "absolute",
+        marginTop: `{9+9*${index}vh}`,
+        zIndex: "100",
+      }}
       className={`alert alert-${alert.alertType}`}
     >
       {alert.msg}
