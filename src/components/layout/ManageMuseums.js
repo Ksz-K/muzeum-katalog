@@ -1,14 +1,11 @@
 import React, { useEffect, Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import {
-  createMuseum,
-  updateMuseum,
-  deleteMuseum,
-  loadOwned,
-} from "../../actions/loadMuseums";
+import imageCompression from "browser-image-compression";
+import { deleteMuseum, addPhotoMuseum } from "../../actions/loadMuseums";
 import { countMuseums } from "../../actions/museum";
 import Spinner from "./Spinner";
+import { setAlert } from "../../actions/alert";
 
 const ManageMuseums = () => {
   const dispatch = useDispatch();
@@ -47,6 +44,33 @@ const ManageMuseums = () => {
   //Redirect if page reloaded
   if (museumsLoaded.museumsNo === null) {
     return <Redirect to="/" />;
+  }
+
+  async function handleImageUpload(event) {
+    const imageFile = event.target.files[0];
+    // console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+    //  console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 4000,
+      useWebWorker: true,
+    };
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      // console.log(
+      //   "compressedFile instanceof Blob",
+      //   compressedFile instanceof Blob
+      // );
+      // console.log(
+      //   `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+      // );
+
+      await dispatch(addPhotoMuseum(compressedFile, pageContent.id));
+    } catch (error) {
+      //  console.log(error);
+      dispatch(setAlert("error", "danger"));
+    }
   }
 
   return (
@@ -119,23 +143,21 @@ const ManageMuseums = () => {
                       <form className="mb-4">
                         <div className="form-group">
                           <div className="custom-file">
+                            <label className="custom-file-label">
+                              {pageContent.photo.length > 24
+                                ? "Zmień zdjęcie Muzeum"
+                                : "Dodaj zdjęcie Muzeum"}
+                            </label>
                             <input
                               type="file"
-                              name="photo"
                               className="custom-file-input"
-                              id="photo"
+                              accept="image/*"
+                              onChange={(e) => handleImageUpload(e)}
                             />
-                            <label className="custom-file-label">
-                              Dodaj zdjęcie Muzeum
-                            </label>
                           </div>
                         </div>
-                        <input
-                          type="submit"
-                          className="btn btn-light btn-block"
-                          value="Upload Image"
-                        />
                       </form>
+
                       <Link
                         to="/addmuseum"
                         className="btn btn-primary btn-block"
@@ -144,7 +166,7 @@ const ManageMuseums = () => {
                       </Link>
 
                       <Link
-                        to="/managecourses"
+                        to="/manageexpositions"
                         className="btn btn-secondary btn-block"
                       >
                         Zarządzaj wystawami

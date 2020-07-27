@@ -18,6 +18,8 @@ import AddReview from "./components/layout/AddReview";
 import ManageReviews from "./components/layout/ManageReviews";
 import AddMuseum from "./components/layout/AddMuseum";
 import ManageMuseums from "./components/layout/ManageMuseums";
+import ManageExpositions from "./components/layout/ManageExpositions";
+import AddExposition from "./components/layout/AddExposition";
 import Alert from "./components/layout/Alert";
 import { loadUser } from "./actions/auth";
 import { whereVisitorIs } from "./actions/museum";
@@ -69,6 +71,11 @@ const App = () => {
               path="/managereviews"
               component={ManageReviews}
             />
+            <PrivateRoute
+              exact
+              path="/manageexpositions"
+              component={ManageExpositions}
+            />
             <PrivateRoute exact path="/addreview" component={AddReview} />
             <PrivateRoute
               exact
@@ -76,6 +83,11 @@ const App = () => {
               component={ManageMuseums}
             />
             <PrivateRoute exact path="/addmuseum" component={AddMuseum} />
+            <PrivateRoute
+              exact
+              path="/addexposition"
+              component={AddExposition}
+            />
           </Switch>
         </Fragment>
       </Router>

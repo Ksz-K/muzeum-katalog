@@ -8,8 +8,13 @@ import {
   FILTER_MONGO,
   SETUP_LOADED,
   CREATE_MUSEUM,
+  ADD_PHOTO_MUSEUM,
   UPDATE_MUSEUM,
   DELETE_MUSEUM,
+  DELETE_EXPOSITION,
+  CREATE_EXPOSITION,
+  MARK_2_EDIT,
+  UPDATE_EXPOSITION,
 } from "../actions/types";
 
 const initialState = {
@@ -20,6 +25,7 @@ const initialState = {
   preFilter: null,
   showed: null,
   owned: [],
+  expo2edit: {},
 };
 
 export default function (state = initialState, action) {
@@ -84,11 +90,18 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case CREATE_MUSEUM:
-    case UPDATE_MUSEUM:
       return {
         ...state,
         loaded: [...state.loaded, payload.data],
         owned: [payload.data],
+        loading: false,
+      };
+    case UPDATE_MUSEUM:
+    case ADD_PHOTO_MUSEUM:
+      return {
+        ...state,
+        owned: [payload.data],
+        loaded: [payload.data, ...state.loaded],
         loading: false,
       };
     case DELETE_MUSEUM:
@@ -96,6 +109,21 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         owned: [],
+      };
+
+    case CREATE_EXPOSITION:
+    case DELETE_EXPOSITION:
+    case UPDATE_EXPOSITION:
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case MARK_2_EDIT:
+      return {
+        ...state,
+        expo2edit: payload,
+        loading: false,
       };
 
     default:

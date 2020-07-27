@@ -9,9 +9,14 @@ import {
   FILTER_MONGO,
   SETUP_LOADED,
   CREATE_MUSEUM,
+  ADD_PHOTO_MUSEUM,
   UPDATE_MUSEUM,
   DELETE_MUSEUM,
   LOAD_OWNED,
+  DELETE_EXPOSITION,
+  CREATE_EXPOSITION,
+  MARK_2_EDIT,
+  UPDATE_EXPOSITION,
 } from "./types";
 
 //Make loading TRUE
@@ -238,6 +243,40 @@ export const updateMuseum = (
   }
 };
 
+//Add museum photo
+export const addPhotoMuseum = (photo, id) => async (dispatch) => {
+  dispatch(loadingTrue());
+  let formData = new FormData();
+  formData.append("file", photo);
+
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
+
+  try {
+    const res = await axios.put(
+      `/api/v1/museums/${id}/photo`,
+      formData,
+      config
+    );
+
+    dispatch({
+      type: ADD_PHOTO_MUSEUM,
+      payload: res.data,
+    });
+    dispatch(
+      setAlert("Zdjęcie zostało pomyślnie zapisane w katalogu", "success")
+    );
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+  }
+};
+
 //Delete museum
 export const deleteMuseum = (id) => async (dispatch) => {
   dispatch(loadingTrue());
@@ -249,6 +288,115 @@ export const deleteMuseum = (id) => async (dispatch) => {
     });
 
     dispatch(setAlert("Muzeum zostało usunięte", "primary"));
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+    console.log(error);
+  }
+};
+
+//Create exposition
+export const createExposition = (title, description, museumId, owner) => async (
+  dispatch
+) => {
+  dispatch(loadingTrue());
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({
+    title,
+    description,
+  });
+
+  try {
+    const res = await axios.post(
+      `/api/v1/museums/${museumId}/expositions`,
+      body,
+      config
+    );
+
+    dispatch({
+      type: CREATE_EXPOSITION,
+    });
+    dispatch(
+      setAlert("Wystawa została pomyślnie zapisane w katalogu", "success")
+    );
+    dispatch(loadOwned(`?user=${owner}`));
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+  }
+};
+
+//Mark exposition to edit
+export const mark2edit = (expositionId) => async (dispatch) => {
+  dispatch(loadingTrue());
+  dispatch({
+    type: MARK_2_EDIT,
+    payload: expositionId,
+  });
+};
+
+//Update exposition
+export const updateExposition = (
+  title,
+  description,
+  expositionId,
+  owner
+) => async (dispatch) => {
+  dispatch(loadingTrue());
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({
+    title,
+    description,
+  });
+
+  try {
+    const res = await axios.post(
+      `/api/v1/expositions/${expositionId}`,
+      body,
+      config
+    );
+
+    dispatch({
+      type: UPDATE_EXPOSITION,
+    });
+    dispatch(
+      setAlert("Wystawa została pomyślnie zaktualizowana w katalogu", "success")
+    );
+    dispatch(loadOwned(`?user=${owner}`));
+  } catch (error) {
+    const errors = error.response.data.error;
+    if (errors) {
+      dispatch(setAlert(errors, "danger"));
+    }
+  }
+};
+
+//Delete exposition
+export const deleteExposition = (id, owner) => async (dispatch) => {
+  dispatch(loadingTrue());
+  try {
+    await axios.delete(`/api/v1/expositions/${id}`);
+
+    dispatch({
+      type: DELETE_EXPOSITION,
+    });
+
+    dispatch(setAlert("Wystawa została usunięta", "primary"));
+    dispatch(loadOwned(`?user=${owner}`));
   } catch (error) {
     const errors = error.response.data.error;
     if (errors) {
