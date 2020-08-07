@@ -360,7 +360,7 @@ export const updateExposition = (
   });
 
   try {
-    await axios.post(`/api/v1/expositions/${expositionId}`, body, config);
+    await axios.put(`/api/v1/expositions/${expositionId}`, body, config);
 
     dispatch({
       type: UPDATE_EXPOSITION,
