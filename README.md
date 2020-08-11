@@ -9,7 +9,7 @@ In the project directory, after downloading the repository and unzipping it, you
 This repository contains Front-End part of the application that is built based on the full MERN stack.
 
 Hosted and running front-end application can be found here:
-https://muzeum.kszk.pl/
+http://muzeum.kszk.pl/
 
 ### Back-end
 
