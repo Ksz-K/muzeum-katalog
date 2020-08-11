@@ -1,7 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import Spinner from "./Spinner";
 import ConfirmModal from "./ConfirmModal";
 import SearchAddress from "./SearchAddress";
 import { setAlert } from "../../actions/alert";
