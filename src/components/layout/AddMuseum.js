@@ -62,7 +62,7 @@ const AddMuseum = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (address.split(",").pop().trim() !== "Polska") {
+    if (!address.split(",").pop().trim().toLowerCase().startsWith("pol")) {
       return dispatch(setAlert("Adres musi znajdować się w Polsce", "info"));
     }
     toggleModal();
