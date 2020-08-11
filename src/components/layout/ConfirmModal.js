@@ -15,6 +15,7 @@ const ConfirmModal = ({
   toggleModal,
   lat,
   lng,
+  owner,
 }) => {
   const dispatch = useDispatch();
   const comboAddress = `${address}--${lat}--${lng}`;
@@ -23,9 +24,19 @@ const ConfirmModal = ({
   let id = isEdited ? loadedMuseum[0]._id : null;
 
   const handleClick = () => {
+    console.log(comboAddress);
     if (isEdited) {
       dispatch(
-        updateMuseum(name, description, website, phone, email, comboAddress, id)
+        updateMuseum(
+          name,
+          description,
+          website,
+          phone,
+          email,
+          comboAddress,
+          id,
+          owner
+        )
       );
     } else {
       dispatch(

@@ -19,17 +19,52 @@ export const countMuseums = () => async (dispatch) => {
 
 //Show museum search StartPoint
 export const whereVisitorIs = () => async (dispatch) => {
-  try {
-    const res = await axios.get("/api/v1/museums/whereIsVisitor");
-    dispatch({
-      type: WHERE_IS,
-      payload: res.data,
-    });
-  } catch (error) {
-    dispatch(
-      setAlert("System nie uzyskał dostępu do Twojej lokalizacji", "primary")
-    );
+  const options = {
+    enableHighAccuracy: false,
+    timeout: 3000,
+    maximumAge: 0,
+  };
+
+  async function success(pos) {
+    var crd = pos.coords;
+
+    // console.log("Your current position is:");
+    // console.log(`Latitude : ${crd.latitude}`);
+    // console.log(`Longitude: ${crd.longitude}`);
+    // console.log(`More or less ${crd.accuracy} meters.`);
+
+    try {
+      const res = await axios.get(
+        `/api/v1/museums/whereIsVisitor/${crd.latitude}-${crd.longitude}`
+      );
+      dispatch({
+        type: WHERE_IS,
+        payload: res.data,
+      });
+    } catch (error) {
+      dispatch(
+        setAlert("System nie uzyskał dostępu do Twojej lokalizacji", "primary")
+      );
+    }
   }
+
+  async function htmlGeoBlocked() {
+    try {
+      const res = await axios.get(
+        `/api/v1/museums/whereIsVisitor/blocked-blocked`
+      );
+      dispatch({
+        type: WHERE_IS,
+        payload: res.data,
+      });
+    } catch (error) {
+      dispatch(
+        setAlert("System nie uzyskał dostępu do Twojej lokalizacji", "primary")
+      );
+    }
+  }
+
+  navigator.geolocation.getCurrentPosition(success, htmlGeoBlocked, options);
 };
 
 //Obtain list of polish cities

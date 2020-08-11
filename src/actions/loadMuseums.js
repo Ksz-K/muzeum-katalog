@@ -181,6 +181,8 @@ export const createMuseum = (
     address: comboAddress,
   });
 
+  console.log(body);
+
   try {
     const res = await axios.post(`/api/v1/museums/`, body, config);
 
@@ -207,7 +209,8 @@ export const updateMuseum = (
   phone,
   email,
   comboAddress,
-  id
+  id,
+  owner
 ) => async (dispatch) => {
   dispatch(loadingTrue());
   const config = {
@@ -224,6 +227,7 @@ export const updateMuseum = (
     email,
     address: comboAddress,
   });
+  console.log(body);
 
   try {
     const res = await axios.put(`/api/v1/museums/${id}`, body, config);
@@ -235,6 +239,7 @@ export const updateMuseum = (
     dispatch(
       setAlert("Muzeum zostało pomyślnie zaktualizowane w katalogu", "success")
     );
+    dispatch(loadOwned(`?user=${owner}`));
   } catch (error) {
     const errors = error.response.data.error;
     if (errors) {

@@ -29,6 +29,11 @@ const AddMuseum = () => {
         email: museumsLoaded.owned[0].email,
         address: museumsLoaded.owned[0].location.formattedAddress,
       });
+
+      setGeocoords({
+        lat: museumsLoaded.owned[0].location.coordinates[1],
+        lng: museumsLoaded.owned[0].location.coordinates[0],
+      });
     }
   }, []);
 
@@ -88,6 +93,7 @@ const AddMuseum = () => {
                 description={description}
                 lat={geoCoords.lat}
                 lng={geoCoords.lng}
+                owner={museumsLoaded.owned[0].user}
                 toggleModal={() => {
                   toggleModal();
                 }}
